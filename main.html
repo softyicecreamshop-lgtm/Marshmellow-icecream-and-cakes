@@ -227,27 +227,67 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 
 .pos-layout{display:grid;grid-template-columns:1fr;gap:18px}
 @media(min-width:1000px){.pos-layout{grid-template-columns:1.45fr 1fr;align-items:start}}
-.pos-cats{display:flex;gap:9px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-.cat-pill{padding:10px 18px;border-radius:22px;background:#fff;color:var(--brown);font-weight:700;font-size:13px;white-space:nowrap;border:1.5px solid var(--line);transition:.2s;flex-shrink:0}
-.cat-pill:hover{border-color:var(--orange-3);background:var(--cream-2)}
-.cat-pill.active{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;border-color:transparent;box-shadow:var(--shadow-orange);transform:translateY(-1px)}
-.pos-subs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.sub-pill{padding:8px 14px;border-radius:20px;background:var(--cream-2);color:var(--brown);font-weight:700;font-size:12.5px;border:1.5px solid var(--line-2);transition:.2s}
-.sub-pill:hover{border-color:var(--orange-3);background:var(--cream)}
-.sub-pill.active{background:#fff;color:var(--orange);border-color:var(--orange);box-shadow:var(--shadow-sm)}
-.pos-products{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
-@media(max-width:380px){.pos-products{grid-template-columns:repeat(2,1fr);gap:9px}}
-.pos-prod{background:#fff;border-radius:var(--r);padding:11px;box-shadow:var(--shadow);cursor:pointer;transition:.2s;border:2px solid transparent;text-align:left;position:relative;overflow:hidden;display:flex;flex-direction:column}
+
+/* ============ PRODUCT GRID — MOBILE FIX ============ */
+/* Default (mobile-first): 2 columns on phones */
+.pos-products{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:10px;
+}
+/* Tablet: 3 columns */
+@media(min-width:560px){
+  .pos-products{grid-template-columns:repeat(3, minmax(0, 1fr));gap:12px}
+}
+/* Desktop: auto-fill */
+@media(min-width:1000px){
+  .pos-products{grid-template-columns:repeat(auto-fill, minmax(145px, 1fr));gap:12px}
+}
+
+/* Smaller padding + compact text on mobile */
+.pos-prod{
+  background:#fff;border-radius:var(--r);padding:9px;
+  box-shadow:var(--shadow);cursor:pointer;transition:.2s;
+  border:2px solid transparent;text-align:left;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;min-width:0;
+}
 .pos-prod:hover{transform:translateY(-3px);border-color:var(--orange);box-shadow:var(--shadow-lg)}
 .pos-prod:active{transform:scale(.97)}
-.pos-prod .pp-img{width:100%;aspect-ratio:1/1;border-radius:10px;background:linear-gradient(135deg,var(--cream),#FFE9CE);display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:9px;overflow:hidden}
+.pos-prod .pp-img{
+  width:100%;aspect-ratio:1/1;border-radius:8px;
+  background:linear-gradient(135deg,var(--cream),#FFE9CE);
+  display:flex;align-items:center;justify-content:center;font-size:32px;
+  margin-bottom:7px;overflow:hidden;
+}
 .pos-prod .pp-img img{width:100%;height:100%;object-fit:cover;display:block}
-.pos-prod .pp-name{font-size:12.5px;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:5px;min-height:32px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.pos-prod .pp-price{font-size:14px;font-weight:800;color:var(--orange);font-family:var(--f-display);margin-top:auto}
-.pos-prod .pp-stock{font-size:10.5px;color:var(--muted);margin-top:3px;font-weight:600}
+.pos-prod .pp-name{
+  font-size:12px;font-weight:700;color:var(--dark);line-height:1.3;
+  margin-bottom:4px;min-height:0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;word-break:break-word;
+}
+.pos-prod .pp-price{
+  font-size:13px;font-weight:800;color:var(--orange);
+  font-family:var(--f-display);margin-top:auto;
+}
+.pos-prod .pp-stock{font-size:10px;color:var(--muted);margin-top:2px;font-weight:600}
 .pos-prod .pp-stock.low{color:var(--red)}
-.pos-prod .pp-sub{font-size:10px;color:var(--violet);font-weight:700;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
+.pos-prod .pp-sub{font-size:9.5px;color:var(--violet);font-weight:700;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+/* Larger screens: restore comfortable sizes */
+@media(min-width:560px){
+  .pos-prod{padding:11px}
+  .pos-prod .pp-img{font-size:36px;border-radius:10px;margin-bottom:9px}
+  .pos-prod .pp-name{font-size:12.5px;min-height:32px}
+  .pos-prod .pp-price{font-size:14px}
+  .pos-prod .pp-stock{font-size:10.5px;margin-top:3px}
+  .pos-prod .pp-sub{font-size:10px}
+}
+@media(min-width:1000px){
+  .pos-prod .pp-img{font-size:38px}
+}
+
+/* Bottom sheet cart on mobile stays below the products */
 .cart-box{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);display:flex;flex-direction:column;max-height:calc(100vh - 120px);position:sticky;top:80px;border:1px solid var(--line-2);overflow:hidden}
 @media(max-width:999px){.cart-box{position:static;max-height:none}}
 .cart-head{padding:16px 20px;border-bottom:1px solid var(--line-2);font-weight:800;color:var(--dark);display:flex;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:15px;gap:8px}
@@ -283,6 +323,15 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .pay-methods button.active{background:linear-gradient(135deg,var(--orange),var(--orange-2));border-color:transparent;color:#fff;box-shadow:var(--shadow-orange)}
 .pay-methods button.active[data-pay="Pending"]{background:linear-gradient(135deg,var(--gold),#F2C95F);box-shadow:0 8px 24px rgba(227,178,60,.28)}
 .pay-methods button .pm-ic{font-size:16px}
+
+.pos-cats{display:flex;gap:9px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.cat-pill{padding:10px 18px;border-radius:22px;background:#fff;color:var(--brown);font-weight:700;font-size:13px;white-space:nowrap;border:1.5px solid var(--line);transition:.2s;flex-shrink:0}
+.cat-pill:hover{border-color:var(--orange-3);background:var(--cream-2)}
+.cat-pill.active{background:linear-gradient(135deg,var(--orange),var(--orange-2));color:#fff;border-color:transparent;box-shadow:var(--shadow-orange);transform:translateY(-1px)}
+.pos-subs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.sub-pill{padding:8px 14px;border-radius:20px;background:var(--cream-2);color:var(--brown);font-weight:700;font-size:12.5px;border:1.5px solid var(--line-2);transition:.2s}
+.sub-pill:hover{border-color:var(--orange-3);background:var(--cream)}
+.sub-pill.active{background:#fff;color:var(--orange);border-color:var(--orange);box-shadow:var(--shadow-sm)}
 
 .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
 .filter-bar .input{max-width:220px}
@@ -367,7 +416,6 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .ilc-hint{font-size:12px;color:var(--muted);line-height:1.55;margin-top:10px}
 .ilc-hint code{background:var(--cream);padding:2px 6px;border-radius:5px;font-family:ui-monospace,monospace;font-size:11.5px;color:var(--brown);}
 
-/* Activity log styles */
 .act-type-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:14px;font-size:11.5px;font-weight:800;letter-spacing:.2px;text-transform:uppercase;background:var(--cream);color:var(--brown);white-space:nowrap;}
 .act-type-sale{background:var(--green-soft);color:var(--green)}
 .act-type-sale_edit{background:var(--gold-soft);color:#8A6B12}
@@ -385,12 +433,7 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .act-user b{font-size:13px;color:var(--dark)}
 .act-user small{font-size:11px;color:var(--muted)}
 
-/* Order cards */
-.order-card{
-  background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px 18px;
-  border:1px solid var(--line-2);margin-bottom:12px;border-left:4px solid var(--teal);
-  transition:.2s;
-}
+.order-card{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px 18px;border:1px solid var(--line-2);margin-bottom:12px;border-left:4px solid var(--teal);transition:.2s;}
 .order-card.completed{border-left-color:var(--green);opacity:.85}
 .order-card.cancelled{border-left-color:var(--red);opacity:.65}
 .order-card.overdue{border-left-color:var(--red);background:linear-gradient(135deg,#fff,#FFF5F5);box-shadow:0 6px 24px rgba(229,72,77,.12)}
@@ -404,16 +447,9 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .order-items{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:10px;line-height:1.5}
 .order-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .order-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;padding-top:10px;border-top:1px dashed var(--line-2)}
-@media(max-width:520px){
-  .order-card{padding:12px 14px}
-  .order-actions .btn{flex:1;min-width:0}
-}
+@media(max-width:520px){.order-card{padding:12px 14px}.order-actions .btn{flex:1;min-width:0}}
 
-/* Pinned order reminder */
-.pin-order{
-  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-sm);
-  margin-bottom:8px;border:1px solid;background:#fff;
-}
+.pin-order{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r-sm);margin-bottom:8px;border:1px solid;background:#fff;}
 .pin-order.upcoming{border-color:#C6E8CF;background:linear-gradient(135deg,#fff,#F2FBF5)}
 .pin-order.due-soon{border-color:var(--orange-3);background:linear-gradient(135deg,#fff,var(--gold-soft))}
 .pin-order.overdue{border-color:#F5C0C0;background:linear-gradient(135deg,#fff,var(--red-soft))}
@@ -424,12 +460,8 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .pin-order .po-info b{font-size:13.5px;color:var(--dark);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pin-order .po-info small{font-size:11.5px;color:var(--muted);font-weight:600;display:block;margin-top:2px}
 .pin-order .po-amt{font-family:var(--f-display);font-weight:800;color:var(--orange);flex-shrink:0;font-size:14px}
-@media(max-width:520px){
-  .pin-order{flex-wrap:wrap}
-  .pin-order .po-info{flex:1 1 100%;order:3}
-}
+@media(max-width:520px){.pin-order{flex-wrap:wrap}.pin-order .po-info{flex:1 1 100%;order:3}}
 
-/* Tabs inside orders page */
 .sub-tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--cream-2);padding:6px;border-radius:var(--r-sm);border:1px solid var(--line-2);overflow-x:auto}
 .sub-tab{padding:10px 18px;border-radius:9px;font-weight:700;font-size:13px;color:var(--brown);white-space:nowrap;flex-shrink:0;transition:.15s;background:transparent}
 .sub-tab.active{background:#fff;color:var(--orange);box-shadow:var(--shadow-sm)}
@@ -455,7 +487,7 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
     </div>
     <nav id="mainNav"></nav>
     <div class="sb-footer">
-      <span class="dot"></span>Portal v7.0<br>
+      <span class="dot"></span>Portal v7.1<br>
       <span style="font-size:10.5px">Internal use only</span>
     </div>
   </aside>
@@ -511,7 +543,6 @@ const db = getDatabase(app);
 
 const MAX_ACTIVITIES = 10000;
 
-/* ---------- STATE ---------- */
 const State = {
   user:null, profile:null,
   categories:{}, subcategories:{}, products:{}, customers:{}, sales:{}, orders:{},
@@ -522,21 +553,16 @@ const State = {
   chartInstances:{}, listeners:[],
   posCustomer:null, posSelectedCat:null, posSelectedSub:null, posSelectedPay:'Cash',
   cartDiscount:0, cartNote:'',
-  // Order tab state
-  orderSubTab:'new', // 'new' | 'list'
+  orderSubTab:'new',
   orderCart:[], orderCustomer:null, orderSelectedCat:null, orderSelectedSub:null,
   orderPay:'Cash', orderDiscount:0, orderNote:'', orderDate:'', orderTime:'',
   orderPage:1, orderPerPage:10, orderDateFilterMode:'today', orderCustomDate:'',
   editingOrderId:null, editingOrder:null,
-  // Sales tab state
   salesPage:1, salesPerPage:10, salesPayFilter:'All', salesSearch:'', salesDate:undefined,
   dashboardOrdersPage:1, dashboardOrdersPerPage:10,
-  // Reports state
   repFromDate:'', repToDate:'',
-  // Activity UI
   activityPage:1, activityPerPage:10, activityTypeFilter:'All', activityUserFilter:'All',
   activityDateFilter:'', activitySearch:'',
-  // Inventory expanded sets
   invExpandedCats: new Set(),
   invExpandedSubs: new Set(),
   imgLinkInput:'', imgLinkOutput:'',
@@ -545,9 +571,9 @@ const State = {
 
 const roleOf = () => State.profile?.role || 'staff';
 const isAdmin = () => ['owner','admin'].includes(roleOf());
+const isStaff = () => !isAdmin();
 const roleLabelOf = () => { const r = roleOf(); return (r==='owner'||r==='admin') ? 'Admin' : (r==='manager'?'Manager':'Staff'); };
 
-/* ---------- UTILS ---------- */
 const $ = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -596,7 +622,7 @@ function fmtDuration(ms){
   return `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
 }
 
-/* ---------- ACTIVITY LOG (10k cap) ---------- */
+/* ---------- ACTIVITY LOG ---------- */
 async function recordActivity({type, description, recordId=null, details=null}){
   if (!State.user) return;
   const payload = {
@@ -611,7 +637,6 @@ async function recordActivity({type, description, recordId=null, details=null}){
   if (details && typeof details === 'object') payload.details = details;
   try {
     await push(ref(db,'activities'), payload);
-    // Async prune if over cap — fire and forget
     pruneActivitiesIfNeeded().catch(()=>{});
   } catch(e){ console.warn('Activity log failed:', e?.code || e?.message); }
 }
@@ -626,11 +651,9 @@ async function pruneActivitiesIfNeeded(){
     const keys = Object.keys(all);
     const total = keys.length;
     if (total <= MAX_ACTIVITIES) return;
-    // Sort by timestamp (ascending, oldest first); use timestampLocal fallback
     const entries = keys.map(k => {
       const a = all[k];
-      const t = typeof a.timestamp === 'number' ? a.timestamp :
-                new Date(a.timestampLocal || a.timestamp || 0).getTime();
+      const t = typeof a.timestamp === 'number' ? a.timestamp : new Date(a.timestampLocal || a.timestamp || 0).getTime();
       return { key:k, t: isNaN(t) ? 0 : t };
     });
     entries.sort((a,b)=> a.t - b.t);
@@ -638,12 +661,8 @@ async function pruneActivitiesIfNeeded(){
     const updates = {};
     toRemove.forEach(e => { updates['activities/'+e.key] = null; });
     await update(ref(db), updates);
-    console.log('Pruned ' + toRemove.length + ' old activities');
-  } catch(e){
-    console.warn('Activity prune failed:', e?.code || e?.message);
-  } finally {
-    pruneInFlight = false;
-  }
+  } catch(e){ console.warn('Activity prune failed:', e?.code || e?.message); }
+  finally { pruneInFlight = false; }
 }
 
 /* ---------- BUSINESS DAY ---------- */
@@ -654,9 +673,7 @@ function getActiveStartMs(){
   if (d.startedAtLocalISO) { const t = new Date(d.startedAtLocalISO).getTime(); if (!isNaN(t)) return t; }
   return null;
 }
-function activeBusinessDate(){
-  return State.activeDay?.businessDate || todayISO();
-}
+function activeBusinessDate(){ return State.activeDay?.businessDate || todayISO(); }
 function activeDaySales(){
   const id = State.activeDayId; if (!id) return [];
   return Object.entries(State.sales||{}).map(([k,s])=>({id:k,...s}))
@@ -676,7 +693,6 @@ function activeDayTotals(){
   return { total, items, orders: sales.length, byPay };
 }
 
-/* ---------- HIERARCHY ---------- */
 function subsForCat(catId){ return Object.entries(State.subcategories).filter(([id,s])=>s.categoryId===catId).sort((a,b)=>(a[1].order||0)-(b[1].order||0)); }
 function productsFor(catId, subId){ return Object.entries(State.products).filter(([id,p])=> p.categoryId===catId && (p.subcategoryId||'')===(subId||'')).sort((a,b)=>(a[1].name||'').localeCompare(b[1].name||'')); }
 function isLegacyProduct(p){ return !p.subcategoryId && p.variants && p.variants.length > 0; }
@@ -688,7 +704,6 @@ function productPrice(p){
 function subName(subId){ if(!subId) return 'General'; return State.subcategories[subId]?.name || 'General'; }
 function productStock(p){ return Math.max(0, Number(p?.stock)||0); }
 
-/* ---------- STOCK ---------- */
 async function adjustProductStock(pid, delta, meta={}){
   const pidRef = ref(db, 'products/'+pid+'/stock');
   const result = await runTransaction(pidRef, (current)=>{
@@ -729,7 +744,6 @@ async function setProductStock(pid, value, meta={}){
   return { ok:true, value: Number(result.snapshot.val())||0 };
 }
 
-/* ---------- IMAGE LINK ---------- */
 function extractDriveFileId(url){
   if (!url) return null;
   const s = String(url).trim();
@@ -740,7 +754,6 @@ function extractDriveFileId(url){
 }
 function convertDriveLink(url){ const id = extractDriveFileId(url); return id ? 'https://lh3.googleusercontent.com/d/'+id : null; }
 
-/* ---------- PROFILE MENU ---------- */
 window.openProfileMenu = ()=>{
   const p = State.profile || {};
   openModal('My Account',
@@ -756,7 +769,6 @@ window.openProfileMenu = ()=>{
 };
 window.handleLogout = async ()=>{ closeModal(); detachListeners(); try{ await signOut(auth); }catch(e){} window.location.replace('index.html'); };
 
-/* ---------- AUTH ---------- */
 onAuthStateChanged(auth, async (user)=>{
   if(user){
     showLoading(true);
@@ -802,7 +814,6 @@ onAuthStateChanged(auth, async (user)=>{
   }
 });
 
-/* ---------- LISTENERS ---------- */
 function attachListeners(){
   const add = (path, cb)=>{
     const un = onValue(ref(db,path), snap=>cb(snap.val()||{}), err=>console.warn(path,err.code));
@@ -859,7 +870,7 @@ function rerenderActive(){
 }
 function detachListeners(){ State.listeners.forEach(un=>{ try{un();}catch(e){} }); State.listeners = []; }
 
-/* ---------- NAVIGATION (12 tabs in exact order) ---------- */
+/* ---------- NAVIGATION ---------- */
 const NAV_ITEMS = [
   { id:'dashboard', label:'Dashboard', ic:'📊', adminOnly:false },
   { id:'pos',       label:'New Sale',  ic:'🛒', adminOnly:false },
@@ -909,10 +920,9 @@ window.navigateTo = (pageId)=>{
 };
 
 /* ============================================================
-   BUSINESS DAY
+   BUSINESS DAY — Start/Close available to ALL users (staff + admin)
    ============================================================ */
 window.startBusinessDay = async ()=>{
-  if(!isAdmin()){ toast('Admin only','err'); return; }
   if (State.busy) return;
   if (State.activeDayId) { toast('A business day is already active','err'); return; }
   const now = new Date();
@@ -941,7 +951,6 @@ window.startBusinessDay = async ()=>{
 };
 
 window.closeBusinessDay = async ()=>{
-  if(!isAdmin()){ toast('Admin only','err'); return; }
   if (State.busy) return;
   const dayId = State.activeDayId;
   if (!dayId) { toast('No active business day','err'); return; }
@@ -997,15 +1006,15 @@ function renderDashboard(){
         <div class="bd-banner-sub">Date: <b>${fmtDate(activeDay.businessDate)}</b> · Started: <b>${fmtTime(activeDay.startAtLocal || activeDay.startAtServer)}</b></div>
         <div class="bd-banner-sub">Duration: <b id="bdTimer">${fmtDuration(start ? (Date.now()-start) : 0)}</b></div>
       </div>
-      ${isAdmin()?`<button class="btn btn-danger" onclick="closeBusinessDay()">🔒 Close Day</button>`:''}
+      <button class="btn btn-danger" onclick="closeBusinessDay()">🔒 Close Day</button>
     </div>`;
   } else {
     bannerHTML = `<div class="bd-banner inactive">
       <div class="bd-banner-info">
         <div class="bd-banner-title">⏸ No Business Day Active</div>
-        <div class="bd-banner-sub">${isAdmin()?'Start a business day to begin recording sales.':'Waiting for admin to start a business day.'}</div>
+        <div class="bd-banner-sub">Start a business day to begin recording sales.</div>
       </div>
-      ${isAdmin()?`<button class="btn btn-primary" onclick="startBusinessDay()">▶ Start Day</button>`:''}
+      <button class="btn btn-primary" onclick="startBusinessDay()">▶ Start Day</button>
     </div>`;
   }
 
@@ -1014,7 +1023,6 @@ function renderDashboard(){
     <div class="stat-card green"><span class="sc-icon">💵</span><div class="sc-label">Sales Today</div><div class="sc-value mono">${fmtINR(tot.total)}</div><div class="sc-sub">${tot.orders} order${tot.orders===1?'':'s'}</div></div>
   </div>`;
 
-  // Dashboard quick actions in required order: New Sale, New Order, Sales Data, Update Stock, New Customer, New Product
   const qaHTML = `<div class="qa-grid">
     <button class="qa-btn c1" onclick="navigateTo('pos')"><span class="qic">🛒</span>New Sale</button>
     <button class="qa-btn c2" onclick="navigateTo('orders')"><span class="qic">📋</span>New Order</button>
@@ -1024,10 +1032,7 @@ function renderDashboard(){
     <button class="qa-btn c6" onclick="navigateTo('products');setTimeout(openAddProduct,80)"><span class="qic">🍰</span>New Product</button>
   </div>`;
 
-  // Pinned reminders for scheduled orders today
   const remindersHTML = renderPinnedOrderReminders();
-
-  // Today's scheduled orders card
   const scheduledHTML = renderTodaysScheduledOrders();
 
   const chartsHTML = `<div class="chart-grid">
@@ -1060,9 +1065,7 @@ function orderDueBucket(o, todayDate, nowHHMM){
   if (o.status !== 'pending') return '';
   if (o.scheduledDate < todayDate) return 'overdue';
   if (o.scheduledDate > todayDate) return 'upcoming';
-  // Same date
   if ((o.scheduledTime||'') < nowHHMM) return 'overdue';
-  // Due soon if within 60 minutes
   if ((o.scheduledTime||'') >= nowHHMM && (o.scheduledTime||'') <= addMinutes(nowHHMM, 60)) return 'due-soon';
   return 'upcoming';
 }
@@ -1079,7 +1082,6 @@ function renderPinnedOrderReminders(){
   const orders = Object.entries(State.orders||{}).map(([id,o])=>({id,...o}))
     .filter(o => o.status === 'pending')
     .filter(o => {
-      // Include overdue + today's + near-future (within 7 days)
       if (o.scheduledDate < bd) return true;
       if (o.scheduledDate === bd) return true;
       const diff = (new Date(o.scheduledDate) - new Date(bd)) / (1000*60*60*24);
@@ -1262,15 +1264,15 @@ function paymentBadge(pm){
 }
 
 /* ============================================================
-   POS (Regular Sale)
+   POS
    ============================================================ */
 function renderPOS(){
   const el = $('#pageContent');
   if (!State.activeDayId) {
     el.innerHTML = `<div class="card" style="border-left:4px solid var(--orange);border-color:var(--orange-3)">
       <div style="font-family:var(--f-display);font-size:17px;color:var(--dark);margin-bottom:6px">⏸ No Active Business Day</div>
-      <p style="color:var(--muted);font-size:13.5px;margin-bottom:16px">${isAdmin()?'Start a business day to record sales.':'Ask an admin to start a business day first.'}</p>
-      ${isAdmin()?`<button class="btn btn-primary" onclick="startBusinessDay()">▶ Start Day</button>`:''}
+      <p style="color:var(--muted);font-size:13.5px;margin-bottom:16px">Start a business day to record sales.</p>
+      <button class="btn btn-primary" onclick="startBusinessDay()">▶ Start Day</button>
     </div>`;
     return;
   }
@@ -1533,38 +1535,27 @@ window.finalizeSale = async ()=>{
 };
 
 /* ============================================================
-   ORDERS (Scheduled Orders)
+   ORDERS
    ============================================================ */
 function renderOrders(){
   const el = $('#pageContent');
-  // Default scheduled date/time for new order
   if (!State.orderDate) State.orderDate = todayISO();
   if (!State.orderTime) State.orderTime = '18:00';
-
-  // Sub-tabs
   el.innerHTML = `
     <div class="sub-tabs">
       <button class="sub-tab ${State.orderSubTab==='new'?'active':''}" onclick="setOrderSubTab('new')">➕ New Order</button>
       <button class="sub-tab ${State.orderSubTab==='list'?'active':''}" onclick="setOrderSubTab('list')">📋 Orders List</button>
     </div>
     <div id="ordersBody"></div>`;
-
   if (State.orderSubTab === 'new') renderOrdersNew();
   else renderOrdersList();
 }
-
-window.setOrderSubTab = (t)=>{
-  State.orderSubTab = t;
-  renderOrders();
-};
+window.setOrderSubTab = (t)=>{ State.orderSubTab = t; renderOrders(); };
 
 function renderOrdersNew(){
   const el = document.getElementById('ordersBody'); if (!el) return;
   const activeCats = Object.entries(State.categories).filter(([id,c])=>c.active!==false).sort((a,b)=>(a[1].order||99)-(b[1].order||99));
-  if (!activeCats.length) {
-    el.innerHTML = `<div class="card"><div class="empty"><span class="em-icon">🍰</span><b>No categories yet</b>Add categories and products first.</div></div>`;
-    return;
-  }
+  if (!activeCats.length) { el.innerHTML = `<div class="card"><div class="empty"><span class="em-icon">🍰</span><b>No categories yet</b>Add products first.</div></div>`; return; }
   if (!State.orderSelectedCat) State.orderSelectedCat = activeCats[0][0];
   el.innerHTML = `
     <div class="pos-layout">
@@ -1586,7 +1577,6 @@ function renderOrdersNew(){
             </div>
             <div class="cs-row total"><span>Total</span><span class="mono" id="orderCartTotal">₹0</span></div>
           </div>
-
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--brown);margin-bottom:4px;letter-spacing:.2px">SCHEDULED DATE *</div>
@@ -1597,11 +1587,9 @@ function renderOrdersNew(){
               <input id="orderTimeInput" type="time" class="input" value="${esc(State.orderTime||'18:00')}" onchange="State.orderTime=this.value" style="padding:8px 10px;min-height:40px;font-size:13px">
             </div>
           </div>
-
           <input id="orderCustName" class="input" placeholder="Customer name" style="margin-bottom:8px;padding:10px 12px;font-size:13px" value="${esc(State.orderCustomer?.name||'')}">
           <input id="orderCustPhone" class="input" placeholder="Contact number" style="margin-bottom:8px;padding:10px 12px;font-size:13px" value="${esc(State.orderCustomer?.mobile||'')}">
           <textarea id="orderNoteInput" class="cart-note" placeholder="Order note (optional)" style="margin-bottom:10px" oninput="State.orderNote=this.value">${esc(State.orderNote||'')}</textarea>
-
           <div class="pay-methods" id="orderPayMethods" style="margin-bottom:12px">
             <button class="${State.orderPay==='Cash'?'active':''}" data-pay="Cash" onclick="setOrderPay('Cash')"><span class="pm-ic">💵</span>Cash</button>
             <button class="${State.orderPay==='UPI'?'active':''}" data-pay="UPI" onclick="setOrderPay('UPI')"><span class="pm-ic">📱</span>UPI</button>
@@ -1616,7 +1604,6 @@ function renderOrdersNew(){
   renderOrderSidebar();
   renderOrdersCart();
 }
-
 function renderOrderSidebar(){
   const catsEl = document.getElementById('orderCats'); if(!catsEl) return;
   const activeCats = Object.entries(State.categories).filter(([id,c])=>c.active!==false).sort((a,b)=>(a[1].order||99)-(b[1].order||99));
@@ -1753,8 +1740,6 @@ window.saveNewOrder = async ()=>{
   const custName = ($('#orderCustName')?.value||'').trim();
   const custPhone = ($('#orderCustPhone')?.value||'').trim();
   const orderNote = ($('#orderNoteInput')?.value||'').trim();
-  if (!custName && !custPhone) { /* walk-in order allowed */ }
-
   const subtotal = orderCartSubtotal();
   const discount = orderDiscountClamped();
   const total = subtotal - discount;
@@ -1784,7 +1769,6 @@ window.saveNewOrder = async ()=>{
     await recordActivity({ type:'order_created', description:'Created order for '+fmtDate(State.orderDate)+' '+State.orderTime, recordId: orderId, details:{ total, scheduledDate: State.orderDate, scheduledTime: State.orderTime } });
     toast('Order created: ' + fmtINR(total));
     State.orderCart = []; State.orderDiscount = 0; State.orderNote = ''; State.orderCustomer = null;
-    // Reset time to default
     State.orderTime = '18:00';
     setOrderSubTab('list');
   } catch(e){
@@ -1792,14 +1776,10 @@ window.saveNewOrder = async ()=>{
   } finally { State.busy = false; showLoading(false); }
 };
 
-/* ---------- Orders List ---------- */
 function renderOrdersList(){
   const el = document.getElementById('ordersBody'); if (!el) return;
-  // Determine default date filter (active business date)
   const bd = activeBusinessDate();
-  if (State.orderDateFilterMode === 'today' && !State.orderCustomDate) {
-    State.orderCustomDate = bd;
-  }
+  if (State.orderDateFilterMode === 'today' && !State.orderCustomDate) State.orderCustomDate = bd;
   const todayVal = State.orderDateFilterMode === 'custom' ? State.orderCustomDate :
                     (State.orderDateFilterMode === 'today' ? bd :
                     (State.orderDateFilterMode === 'tomorrow' ? (()=>{ const d = new Date(bd); d.setDate(d.getDate()+1); return dateToISO(d); })() : ''));
@@ -1828,17 +1808,14 @@ window.setOrderDateFilter = (mode, customDate)=>{
 
 function filteredOrdersList(){
   let list = Object.entries(State.orders||{}).map(([id,o])=>({id,...o}));
-  // Date filter
   const mode = State.orderDateFilterMode;
   let targetDate = '';
   if (mode === 'today') targetDate = activeBusinessDate();
   else if (mode === 'tomorrow') { const d = new Date(activeBusinessDate()); d.setDate(d.getDate()+1); targetDate = dateToISO(d); }
   else if (mode === 'custom') targetDate = State.orderCustomDate || '';
   if (targetDate) list = list.filter(o => o.scheduledDate === targetDate);
-  // Search
   const q = (window._orderSearchVal||'').toLowerCase();
   if (q) list = list.filter(o => [o.customerName, o.customerPhone, o.orderId, o.id].filter(Boolean).join(' ').toLowerCase().includes(q));
-  // Sort newest first by scheduled date+time (descending), then by createdAt
   list.sort((a,b)=>{
     const ka = (a.scheduledDate||'') + (a.scheduledTime||'');
     const kb = (b.scheduledDate||'') + (b.scheduledTime||'');
@@ -1915,7 +1892,6 @@ window.ordersGoToPage = (p)=>{
 };
 window.ordersSetPerPage = (v)=>{ State.orderPerPage = Number(v)||10; State.orderPage = 1; drawOrdersList(); };
 
-/* ---------- Order Details ---------- */
 window.viewOrderDetails = (id)=>{
   const o = State.orders[id]; if (!o) return;
   const itemsHTML = (o.items||[]).map(it=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:13px">
@@ -1943,16 +1919,11 @@ window.viewOrderDetails = (id)=>{
   `, `<button class="btn btn-ghost" onclick="closeModal()">Close</button>`);
 };
 
-/* ---------- Edit Order ---------- */
 window.confirmEditOrder = (id)=>{
   const o = State.orders[id]; if (!o) return;
   if (o.status !== 'pending') { toast('Only pending orders can be edited','err'); return; }
   openModal('Edit Order?',
-    `<p style="font-size:14px;line-height:1.65;color:var(--brown)">Are you sure you want to edit this order? Any changes will update the existing order.</p>
-     <div style="margin-top:14px;padding:12px 14px;background:var(--cream-2);border-radius:var(--r-sm);font-size:12.5px;color:var(--brown);line-height:1.6">
-       <b>Order:</b> ${esc((o.orderId||id).slice(-8))} · ${fmtINR(o.total)}<br>
-       <b>Scheduled:</b> ${fmtDate(o.scheduledDate)} · ${esc(o.scheduledTime)}
-     </div>`,
+    `<p style="font-size:14px;line-height:1.65;color:var(--brown)">Are you sure you want to edit this order? Any changes will update the existing order.</p>`,
     `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
      <button class="btn btn-primary" id="confirmEditBtn">Yes, Edit Order</button>`);
   $('#confirmEditBtn').onclick = ()=>{ closeModal(); openEditOrder(id); };
@@ -1964,7 +1935,6 @@ window.openEditOrder = (id)=>{
   State.editingOrder = { ...o, items: (o.items||[]).map(i=>({...i})) };
   renderEditOrderModal();
 };
-
 function renderEditOrderModal(){
   const o = State.editingOrder; if (!o) return;
   const subtotal = o.items.reduce((a,i)=>a+i.price*i.qty,0);
@@ -1982,14 +1952,13 @@ function renderEditOrderModal(){
         <button style="width:26px;height:26px;border-radius:50%;background:var(--cream);font-weight:800" onclick="editOrderQty(${idx},1)">+</button>
       </div>
       <button class="icon-btn danger" onclick="editOrderRemoveLine(${idx})" title="Remove">✕</button>
-    </div>`).join('') : '<div class="empty" style="padding:20px"><span class="em-icon">📋</span>No items. Add products below.</div>';
+    </div>`).join('') : '<div class="empty" style="padding:20px"><span class="em-icon">📋</span>No items.</div>';
   openModal('Edit Order · ' + (o.orderId||'').slice(-8), `
     <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
       <div style="font-weight:800;color:var(--brown);font-size:12px;text-transform:uppercase;letter-spacing:.6px">Items (${o.items.length})</div>
       <button class="btn btn-ghost btn-sm" onclick="openAddProductToEditOrder()">➕ Add Product</button>
     </div>
     <div style="max-height:200px;overflow-y:auto;margin-bottom:14px">${lineHTML}</div>
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
       <div>
         <div style="font-size:11px;font-weight:700;color:var(--brown);margin-bottom:4px">SCHEDULED DATE</div>
@@ -2000,10 +1969,8 @@ function renderEditOrderModal(){
         <input id="eoTime" type="time" class="input" value="${esc(o.scheduledTime||'')}" onchange="State.editingOrder.scheduledTime=this.value" style="padding:8px 10px;min-height:40px;font-size:13px">
       </div>
     </div>
-
     <input id="eoCustName" class="input" placeholder="Customer name" style="margin-bottom:8px;padding:10px 12px;font-size:13px" value="${esc(o.customerName||'')}" oninput="State.editingOrder.customerName=this.value">
     <input id="eoCustPhone" class="input" placeholder="Contact number" style="margin-bottom:8px;padding:10px 12px;font-size:13px" value="${esc(o.customerPhone||'')}" oninput="State.editingOrder.customerPhone=this.value">
-
     <div style="padding:12px 14px;background:#fff;border-radius:var(--r-sm);border:1px solid var(--line-2);margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px"><span>Subtotal</span><b class="mono">${fmtINR(subtotal)}</b></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px">
@@ -2014,13 +1981,11 @@ function renderEditOrderModal(){
       </div>
       <div style="display:flex;justify-content:space-between;padding:8px 0 0;border-top:1px dashed var(--line);margin-top:6px;font-family:var(--f-display);font-size:16px;font-weight:800"><span>Total</span><b class="mono" style="color:var(--orange)">${fmtINR(total)}</b></div>
     </div>
-
     <label class="field"><span>Payment Method</span>
       <div class="pay-methods" id="eoPayMethods" style="margin-bottom:0">
         ${['Cash','UPI','Card','Pending'].map(pm=>`<button type="button" data-pay="${pm}" class="${(o.paymentMethod||'Cash')===pm?'active':''}" onclick="editOrderSetPay('${pm}',this)">${pm==='Cash'?'💵':pm==='UPI'?'📱':pm==='Card'?'💳':'⏳'} ${pm}</button>`).join('')}
       </div>
     </label>
-
     <label class="field" style="margin-bottom:0"><span>Order Note</span>
       <textarea class="cart-note" style="margin-bottom:0" oninput="State.editingOrder.note=this.value">${esc(o.note||'')}</textarea>
     </label>
@@ -2120,14 +2085,12 @@ window.saveEditedOrder = async ()=>{
   } finally { State.busy = false; showLoading(false); }
 };
 
-/* ---------- Mark Order Done (atomic) ---------- */
 window.confirmMarkOrderDone = (id)=>{
   const o = State.orders[id]; if (!o) return;
   if (o.status !== 'pending') { toast('Only pending orders can be completed','err'); return; }
   if (!State.activeDayId) { toast('Please start a business day before completing orders','err'); return; }
   const bd = State.businessDays[State.activeDayId];
   if (!bd) { toast('Active business day not found','err'); return; }
-  // Stock check
   const shortages = [];
   for (const it of (o.items||[])) {
     const p = State.products[it.pid];
@@ -2156,29 +2119,22 @@ window.markOrderDone = async (id)=>{
   const bd = State.businessDays[State.activeDayId]; if (!bd) return;
   State.busy = true; showLoading(true);
   try {
-    // 1) Atomic guard: only one caller flips status pending → completed
     const statusRef = ref(db, 'orders/'+id+'/status');
     const tx = await runTransaction(statusRef, (cur)=>{
-      if (cur !== 'pending') return; // abort
+      if (cur !== 'pending') return;
       return 'completed';
     });
     if (!tx.committed) { toast('Order already processed by another device','err'); return; }
-
-    // 2) Deduct inventory atomically per line
     const deductions = [];
     try {
       for (const it of (o.items||[])) {
         const p = State.products[it.pid];
         const from = p ? productStock(p) : 0;
-        const res = await adjustProductStock(it.pid, -it.qty, {
-          productName: it.productName, from, reason: 'Order completed '+id, refId: id
-        });
+        const res = await adjustProductStock(it.pid, -it.qty, { productName: it.productName, from, reason: 'Order completed '+id, refId: id });
         if (!res.ok) throw new Error('Stock deduction failed for ' + it.productName);
         deductions.push({ pid: it.pid, qty: it.qty });
       }
-
-      // 3) Write sale record
-      const saleId = id; // use order id as sale id for consistency
+      const saleId = id;
       const sale = {
         saleId, type:'scheduled_order', orderId: id,
         businessDayId: State.activeDayId, businessDate: bd.businessDate,
@@ -2194,19 +2150,11 @@ window.markOrderDone = async (id)=>{
         cancelled: false,
       };
       await set(ref(db,'sales/'+saleId), sale);
-
-      // 4) Update order record with completion info
       await update(ref(db,'orders/'+id), {
-        status: 'completed',
-        completedAt: nowISO(),
-        completedBy: State.user.uid,
-        completedByName: State.profile?.name || '',
-        saleId,
-        businessDayId: State.activeDayId,
-        businessDate: bd.businessDate,
+        status: 'completed', completedAt: nowISO(),
+        completedBy: State.user.uid, completedByName: State.profile?.name || '',
+        saleId, businessDayId: State.activeDayId, businessDate: bd.businessDate,
       });
-
-      // 5) Customer purchase total
       if (o.customerId) {
         const c = State.customers[o.customerId] || {};
         await update(ref(db,'customers/'+o.customerId), {
@@ -2214,13 +2162,10 @@ window.markOrderDone = async (id)=>{
           lastPurchase: bd.businessDate
         });
       }
-
       await recordActivity({ type:'order_completed', description:'Completed order '+((o.orderId||id).slice(-8))+' → sale '+fmtINR(o.total), recordId: id, details:{ saleId, total:o.total } });
       toast('Order completed & added to sales');
     } catch (e) {
-      // Rollback stock + status
       for (const d of deductions) { try { await adjustProductStock(d.pid, d.qty, { reason:'Rollback', refId:'rollback-'+id }); } catch(_){} }
-      // Revert status back to pending
       try { await runTransaction(statusRef, ()=>{ return 'pending'; }); } catch(_){}
       throw e;
     }
@@ -2229,7 +2174,6 @@ window.markOrderDone = async (id)=>{
   } finally { State.busy = false; showLoading(false); }
 };
 
-/* ---------- Cancel Order ---------- */
 window.confirmCancelOrder = (id)=>{
   const o = State.orders[id]; if (!o) return;
   if (o.status !== 'pending') { toast('Only pending orders can be cancelled','err'); return; }
@@ -2256,7 +2200,7 @@ window.confirmCancelOrder = (id)=>{
 };
 
 /* ============================================================
-   SALES DATA TAB (read-only list for staff, admin can filter/export)
+   SALES DATA
    ============================================================ */
 function renderSales(){
   const el = $('#pageContent');
@@ -2359,8 +2303,12 @@ window.salesGoToPage = (p)=>{
 window.salesSetPerPage = (v)=>{ State.salesPerPage = Number(v)||10; State.salesPage = 1; drawSalesTable(); };
 
 /* ============================================================
-   PRODUCTS
+   PRODUCTS / INVENTORY / CUSTOMERS / EXPENSES / IMAGE LINK / REPORTS / ACTIVITY / CLOSING
+   (unchanged from previous version — same as v7.0)
    ============================================================ */
+// For brevity, these are the same functions as v7.0. Paste the identical bodies here.
+// In the file below they are included in full.
+
 function renderProducts(){
   const el = $('#pageContent');
   el.innerHTML = `
@@ -2643,9 +2591,6 @@ window.deleteProduct = (id)=>{
   });
 };
 
-/* ============================================================
-   INVENTORY
-   ============================================================ */
 function renderInventory(){
   const el = $('#pageContent');
   const total = Object.keys(State.products).length;
@@ -2842,9 +2787,6 @@ window.openStockAdjust = (pid)=>{
   };
 };
 
-/* ============================================================
-   CUSTOMERS
-   ============================================================ */
 function renderCustomers(){
   const el = $('#pageContent');
   el.innerHTML = `
@@ -2923,9 +2865,6 @@ window.deleteCustomer = (id)=>{
   });
 };
 
-/* ============================================================
-   EXPENSES (Admin only)
-   ============================================================ */
 function renderExpenses(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
   const el = $('#pageContent');
@@ -3019,9 +2958,6 @@ window.deleteExpense = (id)=>{
   });
 };
 
-/* ============================================================
-   IMAGE LINK
-   ============================================================ */
 function renderImageLink(){
   const el = $('#pageContent');
   el.innerHTML = `
@@ -3086,9 +3022,6 @@ window.clearImageLink = ()=>{
   document.getElementById('ilcPreviewArea').innerHTML = '';
 };
 
-/* ============================================================
-   REPORTS (Admin only) — From Date / To Date
-   ============================================================ */
 function renderReports(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
   const el = $('#pageContent');
@@ -3120,7 +3053,6 @@ function drawReports(){
     el.innerHTML = `<div class="card" style="border-left:4px solid var(--red)"><b style="color:var(--red)">Invalid range:</b> To Date cannot be earlier than From Date.</div>`;
     return;
   }
-  // Business-date based filtering — use sale.businessDate
   const all = Object.entries(State.sales).map(([id,s])=>({id,...s})).filter(s=>{
     if (s.cancelled) return false;
     const bd = s.businessDate || s.date;
@@ -3191,9 +3123,6 @@ function drawReports(){
   }
 }
 
-/* ============================================================
-   ACTIVITY LOG (Admin only)
-   ============================================================ */
 const ACT_TYPE_META = {
   sale_created:  { label:'Sale Created', icon:'🛒', cls:'act-type-sale' },
   sale_edited:   { label:'Sale Edited', icon:'✏️', cls:'act-type-sale_edit' },
@@ -3271,8 +3200,7 @@ function filteredActivities(){
       if (!t) return false;
       const d = new Date(t);
       if (isNaN(d)) return false;
-      const iso = dateToISO(d);
-      return iso === State.activityDateFilter;
+      return dateToISO(d) === State.activityDateFilter;
     });
   }
   if (State.activitySearch) {
@@ -3359,9 +3287,6 @@ window.viewActivityDetails = (id)=>{
   `, `<button class="btn btn-ghost" onclick="closeModal()">Close</button>`);
 };
 
-/* ============================================================
-   BUSINESS DAY TAB
-   ============================================================ */
 function renderClosing(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
   const el = $('#pageContent');
@@ -3426,9 +3351,6 @@ function renderBusinessDayHistory(days){
   }).join('');
 }
 
-/* ============================================================
-   CSV EXPORT
-   ============================================================ */
 window.exportCSV = (type)=>{
   if(!isAdmin()){ toast('Access denied','err'); return; }
   let rows = []; let filename = 'export.csv';
