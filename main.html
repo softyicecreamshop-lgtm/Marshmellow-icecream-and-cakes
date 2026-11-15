@@ -145,7 +145,7 @@ label.field>span{display:block;font-size:12.5px;font-weight:700;color:var(--brow
 .qa-btn.c1 .qic{background:linear-gradient(135deg,var(--orange),var(--orange-3));color:#fff;box-shadow:0 6px 16px rgba(255,152,47,.3)}
 .qa-btn.c2 .qic{background:linear-gradient(135deg,var(--teal),#3DCEC6);color:#fff;box-shadow:0 6px 16px rgba(15,168,160,.3)}
 .qa-btn.c3 .qic{background:linear-gradient(135deg,var(--pink),#F98AB0);color:#fff;box-shadow:0 6px 16px rgba(242,95,139,.3)}
-.qa-btn.c4 .qic{background:linear-gradient(135deg,var(--violet),#A79BF0);color:#fff;box-shadow:0 6px 16px rgba(124,108,217,.3)}
+.qa-btn.c4 .qic{background:linear-gradient(135deg,var(--violet),#A79BF0));color:#fff;box-shadow:0 6px 16px rgba(124,108,217,.3)}
 .qa-btn.c5 .qic{background:linear-gradient(135deg,var(--gold),#F2C95F);color:#fff;box-shadow:0 6px 16px rgba(227,178,60,.3)}
 .qa-btn.c6 .qic{background:linear-gradient(135deg,var(--brown),#B98055);color:#fff;box-shadow:0 6px 16px rgba(147,96,47,.3)}
 .qa-btn:hover .qic{transform:scale(1.08) rotate(-4deg)}
@@ -227,54 +227,20 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 
 .pos-layout{display:grid;grid-template-columns:1fr;gap:18px}
 @media(min-width:1000px){.pos-layout{grid-template-columns:1.45fr 1fr;align-items:start}}
+.pos-products{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:10px;}
+@media(min-width:560px){.pos-products{grid-template-columns:repeat(3, minmax(0, 1fr));gap:12px}}
+@media(min-width:1000px){.pos-products{grid-template-columns:repeat(auto-fill, minmax(145px, 1fr));gap:12px}}
 
-/* ============ PRODUCT GRID — MOBILE FIX ============ */
-/* Default (mobile-first): 2 columns on phones */
-.pos-products{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:10px;
-}
-/* Tablet: 3 columns */
-@media(min-width:560px){
-  .pos-products{grid-template-columns:repeat(3, minmax(0, 1fr));gap:12px}
-}
-/* Desktop: auto-fill */
-@media(min-width:1000px){
-  .pos-products{grid-template-columns:repeat(auto-fill, minmax(145px, 1fr));gap:12px}
-}
-
-/* Smaller padding + compact text on mobile */
-.pos-prod{
-  background:#fff;border-radius:var(--r);padding:9px;
-  box-shadow:var(--shadow);cursor:pointer;transition:.2s;
-  border:2px solid transparent;text-align:left;position:relative;overflow:hidden;
-  display:flex;flex-direction:column;min-width:0;
-}
+.pos-prod{background:#fff;border-radius:var(--r);padding:9px;box-shadow:var(--shadow);cursor:pointer;transition:.2s;border:2px solid transparent;text-align:left;position:relative;overflow:hidden;display:flex;flex-direction:column;min-width:0;}
 .pos-prod:hover{transform:translateY(-3px);border-color:var(--orange);box-shadow:var(--shadow-lg)}
 .pos-prod:active{transform:scale(.97)}
-.pos-prod .pp-img{
-  width:100%;aspect-ratio:1/1;border-radius:8px;
-  background:linear-gradient(135deg,var(--cream),#FFE9CE);
-  display:flex;align-items:center;justify-content:center;font-size:32px;
-  margin-bottom:7px;overflow:hidden;
-}
+.pos-prod .pp-img{width:100%;aspect-ratio:1/1;border-radius:8px;background:linear-gradient(135deg,var(--cream),#FFE9CE);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:7px;overflow:hidden;}
 .pos-prod .pp-img img{width:100%;height:100%;object-fit:cover;display:block}
-.pos-prod .pp-name{
-  font-size:12px;font-weight:700;color:var(--dark);line-height:1.3;
-  margin-bottom:4px;min-height:0;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  overflow:hidden;word-break:break-word;
-}
-.pos-prod .pp-price{
-  font-size:13px;font-weight:800;color:var(--orange);
-  font-family:var(--f-display);margin-top:auto;
-}
+.pos-prod .pp-name{font-size:12px;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:4px;min-height:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
+.pos-prod .pp-price{font-size:13px;font-weight:800;color:var(--orange);font-family:var(--f-display);margin-top:auto;}
 .pos-prod .pp-stock{font-size:10px;color:var(--muted);margin-top:2px;font-weight:600}
 .pos-prod .pp-stock.low{color:var(--red)}
 .pos-prod .pp-sub{font-size:9.5px;color:var(--violet);font-weight:700;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* Larger screens: restore comfortable sizes */
 @media(min-width:560px){
   .pos-prod{padding:11px}
   .pos-prod .pp-img{font-size:36px;border-radius:10px;margin-bottom:9px}
@@ -283,11 +249,8 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
   .pos-prod .pp-stock{font-size:10.5px;margin-top:3px}
   .pos-prod .pp-sub{font-size:10px}
 }
-@media(min-width:1000px){
-  .pos-prod .pp-img{font-size:38px}
-}
+@media(min-width:1000px){.pos-prod .pp-img{font-size:38px}}
 
-/* Bottom sheet cart on mobile stays below the products */
 .cart-box{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);display:flex;flex-direction:column;max-height:calc(100vh - 120px);position:sticky;top:80px;border:1px solid var(--line-2);overflow:hidden}
 @media(max-width:999px){.cart-box{position:static;max-height:none}}
 .cart-head{padding:16px 20px;border-bottom:1px solid var(--line-2);font-weight:800;color:var(--dark);display:flex;justify-content:space-between;align-items:center;font-family:var(--f-display);font-size:15px;gap:8px}
@@ -428,10 +391,26 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .act-type-expense{background:#FFE7D6;color:#B23A0A}
 .act-type-day{background:var(--cream);color:var(--brown)}
 .act-row{cursor:pointer}
-.act-detail-pre{background:var(--cream-2);border-radius:var(--r-sm);padding:12px 14px;border:1px solid var(--line-2);font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-word;}
 .act-user{display:flex;flex-direction:column;gap:2px;line-height:1.25}
 .act-user b{font-size:13px;color:var(--dark)}
 .act-user small{font-size:11px;color:var(--muted)}
+
+/* Diff table */
+.diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+.diff-table thead th{background:var(--cream-2);color:var(--brown);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:9px 10px;text-align:left;border-bottom:1px solid var(--line-2)}
+.diff-table td{padding:9px 10px;border-bottom:1px solid var(--line-2);vertical-align:top;word-break:break-word}
+.diff-table tr:last-child td{border-bottom:none}
+.diff-table .d-field{font-weight:800;color:var(--brown);font-size:12px}
+.diff-table .d-old{color:var(--red);text-decoration:line-through;font-family:ui-monospace,monospace;font-size:11.5px}
+.diff-table .d-new{color:var(--green);font-weight:700;font-family:ui-monospace,monospace;font-size:11.5px}
+.diff-table .d-arrow{color:var(--muted);padding:0 4px;font-size:11px}
+@media(max-width:520px){
+  .diff-table, .diff-table thead, .diff-table tbody, .diff-table tr, .diff-table td {display:block;width:100%}
+  .diff-table thead{display:none}
+  .diff-table tr{border:1px solid var(--line-2);border-radius:8px;margin-bottom:8px;padding:8px 10px}
+  .diff-table td{border:none;padding:4px 0}
+  .diff-table .d-field{display:block;margin-bottom:4px}
+}
 
 .order-card{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:16px 18px;border:1px solid var(--line-2);margin-bottom:12px;border-left:4px solid var(--teal);transition:.2s;}
 .order-card.completed{border-left-color:var(--green);opacity:.85}
@@ -474,7 +453,7 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
     <div class="emoji">🔒</div>
     <h2>Please sign in</h2>
     <p>You must be signed in to access the management portal.</p>
-    <button class="btn btn-primary btn-block" onclick="window.location.replace('index.html')">Go to Login →</button>
+    <button class="btn btn-primary btn-block" onclick="window.location.replace('login.html')">Go to Login →</button>
   </div>
 </div>
 
@@ -487,7 +466,7 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
     </div>
     <nav id="mainNav"></nav>
     <div class="sb-footer">
-      <span class="dot"></span>Portal v7.1<br>
+      <span class="dot"></span>Portal v7.2<br>
       <span style="font-size:10.5px">Internal use only</span>
     </div>
   </aside>
@@ -571,7 +550,6 @@ const State = {
 
 const roleOf = () => State.profile?.role || 'staff';
 const isAdmin = () => ['owner','admin'].includes(roleOf());
-const isStaff = () => !isAdmin();
 const roleLabelOf = () => { const r = roleOf(); return (r==='owner'||r==='admin') ? 'Admin' : (r==='manager'?'Manager':'Staff'); };
 
 const $ = (s,el=document)=>el.querySelector(s);
@@ -622,8 +600,61 @@ function fmtDuration(ms){
   return `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
 }
 
-/* ---------- ACTIVITY LOG ---------- */
-async function recordActivity({type, description, recordId=null, details=null}){
+/* ============================================================
+   ACTIVITY DIFF HELPERS
+   Build a {field: {from, to}} object by comparing before/after objects.
+   Only "meaningful" fields are captured. Order defined in FIELD_ORDER.
+   ============================================================ */
+const FIELD_ORDER = [
+  'name','price','stock','minStock','active','image','description',
+  'categoryId','subcategoryId','categoryName','subcategoryName',
+  'customerName','customerPhone','scheduledDate','scheduledTime',
+  'paymentMethod','subtotal','discount','total','note',
+  'amount','date','category','itemsSummary'
+];
+const FIELD_LABELS = {
+  name:'Name', price:'Price', stock:'Stock', minStock:'Min Stock', active:'Status',
+  image:'Image URL', description:'Description',
+  categoryId:'Category ID', subcategoryId:'Subcategory ID',
+  categoryName:'Category', subcategoryName:'Subcategory',
+  customerName:'Customer Name', customerPhone:'Customer Phone',
+  scheduledDate:'Scheduled Date', scheduledTime:'Scheduled Time',
+  paymentMethod:'Payment Method', subtotal:'Subtotal', discount:'Discount', total:'Total',
+  note:'Note', amount:'Amount', date:'Date', category:'Category', itemsSummary:'Items'
+};
+const NUMERIC_FIELDS = new Set(['price','stock','minStock','subtotal','discount','total','amount']);
+const MONEY_FIELDS = new Set(['price','subtotal','discount','total','amount']);
+
+function normalizeVal(field, v){
+  if (v === undefined || v === null) return '';
+  if (field === 'active') return v === false ? 'Inactive' : 'Active';
+  if (MONEY_FIELDS.has(field)) return '₹' + (Number(v)||0).toLocaleString('en-IN');
+  if (NUMERIC_FIELDS.has(field)) return String(Number(v)||0);
+  return String(v);
+}
+
+function buildDiff(before={}, after={}){
+  const diff = {};
+  const allKeys = new Set([...Object.keys(before||{}), ...Object.keys(after||{})]);
+  for (const k of allKeys) {
+    if (!FIELD_ORDER.includes(k)) continue;
+    const b = before?.[k];
+    const a = after?.[k];
+    const bn = normalizeVal(k, b);
+    const an = normalizeVal(k, a);
+    if (bn !== an) diff[k] = { from: b ?? null, to: a ?? null };
+  }
+  return diff;
+}
+
+function summarizeItems(items){
+  return (items||[]).map(i=>`${i.productName} ×${i.qty}`).join(', ');
+}
+
+/* ============================================================
+   ACTIVITY LOG
+   ============================================================ */
+async function recordActivity({type, description, recordId=null, details=null, diff=null}){
   if (!State.user) return;
   const payload = {
     type, description,
@@ -634,6 +665,7 @@ async function recordActivity({type, description, recordId=null, details=null}){
     timestamp: serverTimestamp(),
     timestampLocal: nowISO(),
   };
+  if (diff && typeof diff === 'object' && Object.keys(diff).length) payload.diff = diff;
   if (details && typeof details === 'object') payload.details = details;
   try {
     await push(ref(db,'activities'), payload);
@@ -665,7 +697,9 @@ async function pruneActivitiesIfNeeded(){
   finally { pruneInFlight = false; }
 }
 
-/* ---------- BUSINESS DAY ---------- */
+/* ============================================================
+   BUSINESS DAY
+   ============================================================ */
 function getActiveStartMs(){
   const d = State.activeDay; if (!d) return null;
   if (typeof d.startAtServer === 'number' && d.startAtServer > 0) return d.startAtServer;
@@ -767,16 +801,16 @@ window.openProfileMenu = ()=>{
     `<button class="btn btn-ghost" onclick="closeModal()">Close</button>
      <button class="btn btn-danger" onclick="handleLogout()">Sign Out</button>`);
 };
-window.handleLogout = async ()=>{ closeModal(); detachListeners(); try{ await signOut(auth); }catch(e){} window.location.replace('index.html'); };
+window.handleLogout = async ()=>{ closeModal(); detachListeners(); try{ await signOut(auth); }catch(e){} window.location.replace('login.html'); };
 
 onAuthStateChanged(auth, async (user)=>{
   if(user){
     showLoading(true);
     try{
       const snap = await get(ref(db,'users/'+user.uid));
-      if(!snap.exists()){ toast('No profile found','err'); await signOut(auth); window.location.replace('index.html'); return; }
+      if(!snap.exists()){ toast('No profile found','err'); await signOut(auth); window.location.replace('login.html'); return; }
       const profile = snap.val();
-      if(profile.active === false){ toast('Account deactivated','err'); await signOut(auth); window.location.replace('index.html'); return; }
+      if(profile.active === false){ toast('Account deactivated','err'); await signOut(auth); window.location.replace('login.html'); return; }
       State.user = user; State.profile = profile;
       $('#authBlock').style.display = 'none';
       $('#appShell').classList.add('active');
@@ -804,13 +838,13 @@ onAuthStateChanged(auth, async (user)=>{
       }, 1000);
     } catch(err){
       console.error(err); toast('Failed to load profile: ' + (err.message || err.code || 'unknown'),'err');
-      await signOut(auth); window.location.replace('index.html');
+      await signOut(auth); window.location.replace('login.html');
     } finally { showLoading(false); }
   } else {
     detachListeners();
     $('#appShell').classList.remove('active');
     $('#authBlock').style.display = 'flex';
-    setTimeout(()=>{ window.location.replace('index.html'); }, 800);
+    setTimeout(()=>{ window.location.replace('login.html'); }, 800);
   }
 });
 
@@ -920,7 +954,7 @@ window.navigateTo = (pageId)=>{
 };
 
 /* ============================================================
-   BUSINESS DAY — Start/Close available to ALL users (staff + admin)
+   BUSINESS DAY — available to all users
    ============================================================ */
 window.startBusinessDay = async ()=>{
   if (State.busy) return;
@@ -1522,7 +1556,16 @@ window.finalizeSale = async ()=>{
         lastPurchase: activeDay.businessDate
       });
     }
-    await recordActivity({ type:'sale_created', description:'Created sale ' + fmtINR(total), recordId: saleId, details:{ total, payment: State.posSelectedPay } });
+    await recordActivity({
+      type:'sale_created',
+      description:'Created sale ' + fmtINR(total),
+      recordId: saleId,
+      diff: buildDiff({}, {
+        itemsSummary: summarizeItems(sale.items),
+        subtotal, discount, total, paymentMethod: State.posSelectedPay,
+        customerName: sale.customerName, note: sale.note
+      })
+    });
     toast('Sale saved: ' + fmtINR(total));
     State.cart = []; State.cartDiscount = 0; State.cartNote = ''; State.posCustomer = null;
     renderCart();
@@ -1766,7 +1809,21 @@ window.saveNewOrder = async ()=>{
   State.busy = true; showLoading(true);
   try {
     await set(ref(db,'orders/'+orderId), order);
-    await recordActivity({ type:'order_created', description:'Created order for '+fmtDate(State.orderDate)+' '+State.orderTime, recordId: orderId, details:{ total, scheduledDate: State.orderDate, scheduledTime: State.orderTime } });
+    await recordActivity({
+      type:'order_created',
+      description:'Created order for '+fmtDate(State.orderDate)+' '+State.orderTime,
+      recordId: orderId,
+      diff: buildDiff({}, {
+        customerName: order.customerName,
+        customerPhone: order.customerPhone,
+        scheduledDate: order.scheduledDate,
+        scheduledTime: order.scheduledTime,
+        itemsSummary: summarizeItems(order.items),
+        subtotal, discount, total,
+        paymentMethod: order.paymentMethod,
+        note: order.note
+      })
+    });
     toast('Order created: ' + fmtINR(total));
     State.orderCart = []; State.orderDiscount = 0; State.orderNote = ''; State.orderCustomer = null;
     State.orderTime = '18:00';
@@ -2061,6 +2118,30 @@ window.saveEditedOrder = async ()=>{
   const subtotal = o.items.reduce((a,i)=>a+i.price*i.qty,0);
   const discount = Math.min(Math.max(0, Number(o.discount)||0), subtotal);
   const total = subtotal - discount;
+
+  // snapshot the before
+  const before = State.orders[o.orderId] || {};
+  const beforeSnapshot = {
+    customerName: before.customerName,
+    customerPhone: before.customerPhone,
+    scheduledDate: before.scheduledDate,
+    scheduledTime: before.scheduledTime,
+    subtotal: before.subtotal, discount: before.discount, total: before.total,
+    paymentMethod: before.paymentMethod,
+    itemsSummary: summarizeItems(before.items),
+    note: before.note
+  };
+  const afterSnapshot = {
+    customerName: o.customerName || 'Walk-in',
+    customerPhone: o.customerPhone || '',
+    scheduledDate: o.scheduledDate,
+    scheduledTime: o.scheduledTime,
+    subtotal, discount, total,
+    paymentMethod: o.paymentMethod,
+    itemsSummary: summarizeItems(o.items),
+    note: o.note || ''
+  };
+
   State.busy = true; showLoading(true);
   try {
     await update(ref(db,'orders/'+o.orderId), {
@@ -2076,7 +2157,13 @@ window.saveEditedOrder = async ()=>{
       lastModifiedBy: State.user.uid,
       lastModifiedByName: State.profile?.name || '',
     });
-    await recordActivity({ type:'order_edited', description:'Edited order '+((o.orderId||'').slice(-8)), recordId: o.orderId, details:{ previousTotal: State.orders[o.orderId]?.total, updatedTotal: total } });
+    const diff = buildDiff(beforeSnapshot, afterSnapshot);
+    await recordActivity({
+      type:'order_edited',
+      description:'Edited order '+((o.orderId||'').slice(-8)),
+      recordId: o.orderId,
+      diff
+    });
     toast('Order updated');
     State.editingOrder = null; State.editingOrderId = null;
     closeModal();
@@ -2162,7 +2249,16 @@ window.markOrderDone = async (id)=>{
           lastPurchase: bd.businessDate
         });
       }
-      await recordActivity({ type:'order_completed', description:'Completed order '+((o.orderId||id).slice(-8))+' → sale '+fmtINR(o.total), recordId: id, details:{ saleId, total:o.total } });
+      await recordActivity({
+        type:'order_completed',
+        description:'Completed order '+((o.orderId||id).slice(-8))+' → sale '+fmtINR(o.total),
+        recordId: id,
+        diff: buildDiff(
+          { itemsSummary:'—', total:0, paymentMethod:'—', customerName: o.customerName },
+          { itemsSummary: summarizeItems(o.items), total:o.total, paymentMethod:o.paymentMethod, customerName:o.customerName }
+        ),
+        details:{ saleId, total:o.total }
+      });
       toast('Order completed & added to sales');
     } catch (e) {
       for (const d of deductions) { try { await adjustProductStock(d.pid, d.qty, { reason:'Rollback', refId:'rollback-'+id }); } catch(_){} }
@@ -2191,7 +2287,12 @@ window.confirmCancelOrder = (id)=>{
       });
       if (!tx.committed) { toast('Order already processed','err'); return; }
       await update(ref(db,'orders/'+id), { cancelledAt: nowISO(), cancelledBy: State.user.uid });
-      await recordActivity({ type:'order_cancelled', description:'Cancelled order '+((o.orderId||id).slice(-8)), recordId: id });
+      await recordActivity({
+        type:'order_cancelled',
+        description:'Cancelled order '+((o.orderId||id).slice(-8)),
+        recordId: id,
+        diff: buildDiff({ status:'pending' }, { status:'cancelled' })
+      });
       toast('Order cancelled');
     } catch (e) {
       toast('Failed: ' + (e.message || e.code || 'unknown'),'err');
@@ -2303,12 +2404,8 @@ window.salesGoToPage = (p)=>{
 window.salesSetPerPage = (v)=>{ State.salesPerPage = Number(v)||10; State.salesPage = 1; drawSalesTable(); };
 
 /* ============================================================
-   PRODUCTS / INVENTORY / CUSTOMERS / EXPENSES / IMAGE LINK / REPORTS / ACTIVITY / CLOSING
-   (unchanged from previous version — same as v7.0)
+   PRODUCTS
    ============================================================ */
-// For brevity, these are the same functions as v7.0. Paste the identical bodies here.
-// In the file below they are included in full.
-
 function renderProducts(){
   const el = $('#pageContent');
   el.innerHTML = `
@@ -2417,7 +2514,7 @@ window.openCategoryManager = ()=>{
     const id = 'cat_' + Date.now();
     const order = Math.max(0,...Object.values(State.categories).map(c=>c.order||0)) + 1;
     await set(ref(db,'categories/'+id), { name, order, active:true });
-    await recordActivity({ type:'category_created', description:'Added category "'+name+'"', recordId:id });
+    await recordActivity({ type:'category_created', description:'Added category "'+name+'"', recordId:id, diff: buildDiff({}, { name, active:true }) });
     toast('Category added'); closeModal();
   };
 };
@@ -2430,8 +2527,14 @@ window.editCategory = (id)=>{
   $('#saveCatBtn').onclick = async ()=>{
     const name = $('#editCatName').value.trim();
     if(!name){ toast('Name required','err'); return; }
+    const before = { name: c.name };
     await update(ref(db,'categories/'+id), { name });
-    await recordActivity({ type:'category_edited', description:'Renamed category to "'+name+'"', recordId:id });
+    await recordActivity({
+      type:'category_edited',
+      description:'Renamed category to "'+name+'"',
+      recordId:id,
+      diff: buildDiff(before, { name })
+    });
     toast('Category updated'); closeModal();
   };
 };
@@ -2447,7 +2550,7 @@ window.deleteCategory = (id)=>{
       Object.entries(State.products).forEach(([pid,p])=>{ if(p.categoryId===id) updates['products/'+pid]=null; });
       updates['categories/'+id]=null;
       await update(ref(db), updates);
-      await recordActivity({ type:'category_deleted', description:'Deleted category "'+catName+'"', recordId:id });
+      await recordActivity({ type:'category_deleted', description:'Deleted category "'+catName+'"', recordId:id, diff: buildDiff({ name: catName }, {}) });
       toast('Category deleted');
     }, 'Delete Everything');
 };
@@ -2463,7 +2566,12 @@ window.openAddSubcategory = (catId)=>{
     const id = 'sub_' + Date.now();
     const order = Math.max(0,...Object.values(State.subcategories).filter(s=>s.categoryId===catId).map(s=>s.order||0)) + 1;
     await set(ref(db,'subcategories/'+id), { categoryId:catId, name, order, active:true });
-    await recordActivity({ type:'subcategory_created', description:'Added subcategory "'+name+'"', recordId:id });
+    await recordActivity({
+      type:'subcategory_created',
+      description:'Added subcategory "'+name+'" in "'+(State.categories[catId]?.name||'')+'"',
+      recordId:id,
+      diff: buildDiff({}, { name, categoryName: State.categories[catId]?.name })
+    });
     toast('Subcategory added'); closeModal();
   };
 };
@@ -2476,8 +2584,14 @@ window.editSubcategory = (sid)=>{
   $('#saveSubBtn').onclick = async ()=>{
     const name = $('#editSubName').value.trim();
     if(!name){ toast('Name required','err'); return; }
+    const before = { name: s.name };
     await update(ref(db,'subcategories/'+sid), { name });
-    await recordActivity({ type:'subcategory_edited', description:'Renamed subcategory to "'+name+'"', recordId:sid });
+    await recordActivity({
+      type:'subcategory_edited',
+      description:'Renamed subcategory to "'+name+'"',
+      recordId:sid,
+      diff: buildDiff(before, { name })
+    });
     toast('Subcategory updated'); closeModal();
   };
 };
@@ -2491,7 +2605,7 @@ window.deleteSubcategory = (sid)=>{
       Object.entries(State.products).forEach(([pid,p])=>{ if(p.subcategoryId===sid) updates['products/'+pid]=null; });
       updates['subcategories/'+sid]=null;
       await update(ref(db), updates);
-      await recordActivity({ type:'subcategory_deleted', description:'Deleted subcategory "'+subNm+'"', recordId:sid });
+      await recordActivity({ type:'subcategory_deleted', description:'Deleted subcategory "'+subNm+'"', recordId:sid, diff: buildDiff({ name: subNm }, {}) });
       toast('Subcategory deleted');
     }, 'Delete');
 };
@@ -2547,19 +2661,36 @@ window.openAddProduct = (presetCat, presetSub)=>{
     if(!cat || !sub){ toast('Category and subcategory required','err'); return; }
     const price = Number($('#pfPrice').value)||0;
     const stock = Math.max(0, Math.floor(Number($('#pfStock').value)||0));
+    const minStock = Math.max(0, Math.floor(Number($('#pfMin').value)||5));
+    const active = $('#pfActive').value === 'true';
+    const image = $('#pfImage').value.trim();
     const id = push(ref(db,'products')).key;
+    const catName = State.categories[cat]?.name || '';
+    const subNameStr = State.subcategories[sub]?.name || '';
     await set(ref(db,'products/'+id), {
-      name, categoryId:cat, subcategoryId:sub, price,
-      image: $('#pfImage').value.trim(), stock,
-      minStock: Math.max(0, Math.floor(Number($('#pfMin').value)||5)),
-      active: $('#pfActive').value === 'true', description:'', createdAt: nowISO()
+      name, categoryId:cat, subcategoryId:sub, price, image, stock, minStock, active,
+      description:'', createdAt: nowISO()
     });
-    await recordActivity({ type:'product_created', description:'Added product "'+name+'"', recordId:id, details:{ price, stock } });
+    await recordActivity({
+      type:'product_created',
+      description:`Added product "${name}" in ${catName} → ${subNameStr}`,
+      recordId:id,
+      diff: buildDiff({}, {
+        name, categoryName: catName, subcategoryName: subNameStr,
+        price, stock, minStock, active, image
+      })
+    });
     toast('Product added'); closeModal();
   };
 };
 window.openEditProduct = (pid)=>{
   const p = State.products[pid]; if(!p) return;
+  const beforeSnapshot = {
+    name: p.name, price: productPrice(p), stock: productStock(p),
+    minStock: p.minStock, active: p.active !== false, image: p.image,
+    categoryName: State.categories[p.categoryId]?.name || '',
+    subcategoryName: p.subcategoryId ? subName(p.subcategoryId) : ''
+  };
   openModal('Edit Product', productFormHTML(p),
     `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
      <button class="btn btn-primary" id="saveProdBtn">Update Product</button>`);
@@ -2571,14 +2702,27 @@ window.openEditProduct = (pid)=>{
     const sub = $('#pfSub').value;
     if(!cat || !sub){ toast('Required fields missing','err'); return; }
     const price = Number($('#pfPrice').value)||0;
+    const stock = Math.max(0, Math.floor(Number($('#pfStock').value)||0));
+    const minStock = Math.max(0, Math.floor(Number($('#pfMin').value)||5));
+    const active = $('#pfActive').value === 'true';
+    const image = $('#pfImage').value.trim();
+    const catName = State.categories[cat]?.name || '';
+    const subNameStr = State.subcategories[sub]?.name || '';
     await update(ref(db,'products/'+pid), {
-      name, categoryId:cat, subcategoryId:sub, price,
-      image: $('#pfImage').value.trim(),
-      stock: Math.max(0, Math.floor(Number($('#pfStock').value)||0)),
-      minStock: Math.max(0, Math.floor(Number($('#pfMin').value)||5)),
-      active: $('#pfActive').value === 'true', variants: null, prices: null,
+      name, categoryId:cat, subcategoryId:sub, price, image, stock, minStock, active,
+      variants: null, prices: null,
     });
-    await recordActivity({ type:'product_edited', description:'Updated product "'+name+'"', recordId:pid });
+    const afterSnapshot = {
+      name, price, stock, minStock, active, image, categoryName: catName, subcategoryName: subNameStr
+    };
+    const diff = buildDiff(beforeSnapshot, afterSnapshot);
+    // If nothing besides category/subcat IDs changed but names did, that's captured via names
+    await recordActivity({
+      type:'product_edited',
+      description:`Updated "${name}" in ${catName} → ${subNameStr}`,
+      recordId:pid,
+      diff
+    });
     toast('Product updated'); closeModal();
   };
 };
@@ -2586,11 +2730,22 @@ window.deleteProduct = (id)=>{
   const p = State.products[id];
   confirmDialog('Delete Product', 'This will permanently delete the product.', async ()=>{
     await remove(ref(db,'products/'+id));
-    await recordActivity({ type:'product_deleted', description:'Deleted product "'+(p?.name||id)+'"', recordId:id });
+    await recordActivity({
+      type:'product_deleted',
+      description:'Deleted product "'+(p?.name||id)+'"',
+      recordId:id,
+      diff: buildDiff({
+        name: p?.name, price: p ? productPrice(p) : null,
+        stock: p ? productStock(p) : null, active: p?.active !== false
+      }, {})
+    });
     toast('Product deleted');
   });
 };
 
+/* ============================================================
+   INVENTORY
+   ============================================================ */
 function renderInventory(){
   const el = $('#pageContent');
   const total = Object.keys(State.products).length;
@@ -2720,7 +2875,14 @@ window.updateStockFromInput = async (pid, inputEl)=>{
     const res = await setProductStock(pid, newVal, { productName: p.name, from: oldVal, reason: 'Manual set' });
     if (!res.ok) { toast('Update failed','err'); inputEl.value = oldVal; }
     else {
-      await recordActivity({ type:'inventory_updated', description:`Set stock for "${p.name}": ${oldVal} → ${res.value}`, recordId:pid, details:{ from:oldVal, to:res.value } });
+      const catName = State.categories[p.categoryId]?.name || '';
+      const subNm = p.subcategoryId ? subName(p.subcategoryId) : '';
+      await recordActivity({
+        type:'inventory_updated',
+        description:`Set stock for "${p.name}"${subNm?' ('+catName+' → '+subNm+')':''}: ${oldVal} → ${res.value}`,
+        recordId:pid,
+        diff: buildDiff({ stock: oldVal }, { stock: res.value })
+      });
       toast(`Stock updated: ${p.name} → ${res.value}`);
     }
   } catch(e){ toast('Error: ' + (e.message||e.code||'unknown'),'err'); inputEl.value = oldVal; }
@@ -2733,7 +2895,14 @@ window.quickAdjustStock = async (pid, delta)=>{
   try {
     const res = await adjustProductStock(pid, delta, { productName: p.name, from, reason: delta>0?'Quick add':'Quick remove' });
     if (res.ok) {
-      await recordActivity({ type: delta>0?'inventory_increased':'inventory_decreased', description:`${delta>0?'Added':'Removed'} ${Math.abs(delta)} for "${p.name}": ${from} → ${res.value}`, recordId: pid, details:{ delta, from, to: res.value } });
+      const catName = State.categories[p.categoryId]?.name || '';
+      const subNm = p.subcategoryId ? subName(p.subcategoryId) : '';
+      await recordActivity({
+        type: delta>0?'inventory_increased':'inventory_decreased',
+        description:`${delta>0?'Added':'Removed'} ${Math.abs(delta)} for "${p.name}"${subNm?' ('+catName+' → '+subNm+')':''}: ${from} → ${res.value}`,
+        recordId: pid,
+        diff: buildDiff({ stock: from }, { stock: res.value })
+      });
       toast(`${p.name}: ${from} → ${res.value}`);
     }
   } catch(e){ toast('Error: ' + (e.message||e.code||'unknown'),'err'); }
@@ -2779,7 +2948,14 @@ window.openStockAdjust = (pid)=>{
       else if (op === 'add') res = await adjustProductStock(pid, q, { productName: p.name, from, reason });
       else res = await adjustProductStock(pid, -q, { productName: p.name, from, reason });
       if (res.ok) {
-        await recordActivity({ type:'inventory_adjusted', description:`Adjusted stock for "${p.name}" (${op} ${q}): ${from} → ${res.value}`, recordId: pid, details:{ op, qty:q, from, to: res.value } });
+        const catName = State.categories[p.categoryId]?.name || '';
+        const subNm = p.subcategoryId ? subName(p.subcategoryId) : '';
+        await recordActivity({
+          type:'inventory_adjusted',
+          description:`Adjusted stock for "${p.name}"${subNm?' ('+catName+' → '+subNm+')':''} (${op} ${q}, ${reason}): ${from} → ${res.value}`,
+          recordId: pid,
+          diff: buildDiff({ stock: from }, { stock: res.value })
+        });
         toast(`${p.name}: ${from} → ${res.value}`);
         closeModal();
       } else toast('Update failed','err');
@@ -2787,6 +2963,9 @@ window.openStockAdjust = (pid)=>{
   };
 };
 
+/* ============================================================
+   CUSTOMERS
+   ============================================================ */
 function renderCustomers(){
   const el = $('#pageContent');
   el.innerHTML = `
@@ -2829,16 +3008,18 @@ window.openAddCustomer = ()=>{
     const name = $('#cName').value.trim();
     if(!name){ toast('Name required','err'); return; }
     const id = push(ref(db,'customers')).key;
-    await set(ref(db,'customers/'+id), {
-      name, mobile:$('#cMobile').value.trim(), birthday:$('#cBirthday').value,
-      notes:$('#cNotes').value.trim(), totalPurchases:0, lastPurchase:null, createdAt:nowISO()
+    const data = { name, mobile:$('#cMobile').value.trim(), birthday:$('#cBirthday').value, notes:$('#cNotes').value.trim(), totalPurchases:0, lastPurchase:null, createdAt:nowISO() };
+    await set(ref(db,'customers/'+id), data);
+    await recordActivity({
+      type:'customer_created', description:'Added customer "'+name+'"', recordId:id,
+      diff: buildDiff({}, { customerName: name, note: data.mobile ? 'Mobile: '+data.mobile : '' })
     });
-    await recordActivity({ type:'customer_created', description:'Added customer "'+name+'"', recordId:id });
     toast('Customer added'); closeModal();
   };
 };
 window.openEditCustomer = (id)=>{
   const c = State.customers[id]; if(!c) return;
+  const beforeSnapshot = { customerName: c.name, customerPhone: c.mobile, note: c.notes, date: c.birthday };
   openModal('Edit Customer', `
     <label class="field"><span>Name</span><input id="cName" class="input" value="${esc(c.name||'')}"></label>
     <label class="field"><span>Mobile</span><input id="cMobile" class="input" value="${esc(c.mobile||'')}"></label>
@@ -2848,11 +3029,13 @@ window.openEditCustomer = (id)=>{
       <button class="btn btn-primary" id="saveCustBtn">Update</button>`);
   $('#saveCustBtn').onclick = async ()=>{
     const newName = $('#cName').value.trim();
-    await update(ref(db,'customers/'+id), {
-      name:newName, mobile:$('#cMobile').value.trim(),
-      birthday:$('#cBirthday').value, notes:$('#cNotes').value.trim()
+    const data = { name:newName, mobile:$('#cMobile').value.trim(), birthday:$('#cBirthday').value, notes:$('#cNotes').value.trim() };
+    await update(ref(db,'customers/'+id), data);
+    const afterSnapshot = { customerName: data.name, customerPhone: data.mobile, note: data.notes, date: data.birthday };
+    await recordActivity({
+      type:'customer_edited', description:'Updated customer "'+newName+'"', recordId:id,
+      diff: buildDiff(beforeSnapshot, afterSnapshot)
     });
-    await recordActivity({ type:'customer_edited', description:'Updated customer "'+newName+'"', recordId:id });
     toast('Customer updated'); closeModal();
   };
 };
@@ -2860,11 +3043,19 @@ window.deleteCustomer = (id)=>{
   const c = State.customers[id];
   confirmDialog('Delete Customer', 'Historical sales will retain the name as a snapshot.', async ()=>{
     await remove(ref(db,'customers/'+id));
-    await recordActivity({ type:'customer_deleted', description:'Deleted customer "'+(c?.name||id)+'"', recordId:id });
+    await recordActivity({
+      type:'customer_deleted',
+      description:'Deleted customer "'+(c?.name||id)+'"',
+      recordId:id,
+      diff: buildDiff({ customerName: c?.name, customerPhone: c?.mobile }, {})
+    });
     toast('Customer deleted');
   });
 };
 
+/* ============================================================
+   EXPENSES
+   ============================================================ */
 function renderExpenses(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
   const el = $('#pageContent');
@@ -2914,12 +3105,18 @@ window.openAddExpense = ()=>{
     const amt = Number($('#expAmt').value)||0;
     if(amt<=0){ toast('Enter amount','err'); return; }
     const id = push(ref(db,'expenses')).key;
-    await set(ref(db,'expenses/'+id), {
+    const data = {
       date: $('#expDate').value, category:$('#expCat').value, description:$('#expDesc').value.trim(),
       amount:amt, paymentMethod:$('#expPay').value, notes:$('#expNotes').value.trim(),
       createdBy:State.user.uid, createdAt:nowISO()
+    };
+    await set(ref(db,'expenses/'+id), data);
+    await recordActivity({
+      type:'expense_created',
+      description:'Added expense '+fmtINR(amt)+' ('+data.category+')',
+      recordId:id,
+      diff: buildDiff({}, { amount: amt, category: data.category, date: data.date, note: data.description })
     });
-    await recordActivity({ type:'expense_created', description:'Added expense '+fmtINR(amt), recordId:id });
     toast('Expense added'); closeModal();
   };
 };
@@ -2927,6 +3124,7 @@ window.openEditExpense = (id)=>{
   if(!isAdmin()) return;
   const e = State.expenses[id]; if(!e) return;
   const cats = ['Raw Materials','Packaging','Electricity','Transportation','Staff Payments','Maintenance','Miscellaneous'];
+  const beforeSnapshot = { amount: e.amount, category: e.category, date: e.date, note: e.description };
   openModal('Edit Expense', `
     <label class="field"><span>Date</span><input id="expDate" type="date" class="input" value="${esc(e.date||'')}"></label>
     <label class="field"><span>Category</span><select id="expCat" class="input">${cats.map(c=>`<option ${c===e.category?'selected':''}>${c}</option>`).join('')}</select></label>
@@ -2939,12 +3137,19 @@ window.openEditExpense = (id)=>{
   $('#saveExpBtn').onclick = async ()=>{
     const amt = Number($('#expAmt').value)||0;
     if(amt<=0){ toast('Enter amount','err'); return; }
-    await update(ref(db,'expenses/'+id), {
+    const data = {
       date: $('#expDate').value, category:$('#expCat').value, description:$('#expDesc').value.trim(),
       amount:amt, paymentMethod:$('#expPay').value, notes:$('#expNotes').value.trim(),
       updatedBy:State.user.uid, updatedAt:nowISO()
+    };
+    await update(ref(db,'expenses/'+id), data);
+    const afterSnapshot = { amount: amt, category: data.category, date: data.date, note: data.description };
+    await recordActivity({
+      type:'expense_edited',
+      description:'Edited expense '+fmtINR(amt),
+      recordId:id,
+      diff: buildDiff(beforeSnapshot, afterSnapshot)
     });
-    await recordActivity({ type:'expense_edited', description:'Edited expense '+fmtINR(amt), recordId:id });
     toast('Expense updated'); closeModal();
   };
 };
@@ -2953,11 +3158,19 @@ window.deleteExpense = (id)=>{
   const e = State.expenses[id];
   confirmDialog('Delete Expense','Remove this expense record?', async ()=>{
     await remove(ref(db,'expenses/'+id));
-    await recordActivity({ type:'expense_deleted', description:'Deleted expense '+fmtINR(e?.amount||0), recordId:id });
+    await recordActivity({
+      type:'expense_deleted',
+      description:'Deleted expense '+fmtINR(e?.amount||0),
+      recordId:id,
+      diff: buildDiff({ amount: e?.amount, category: e?.category, date: e?.date }, {})
+    });
     toast('Deleted');
   });
 };
 
+/* ============================================================
+   IMAGE LINK
+   ============================================================ */
 function renderImageLink(){
   const el = $('#pageContent');
   el.innerHTML = `
@@ -3022,6 +3235,9 @@ window.clearImageLink = ()=>{
   document.getElementById('ilcPreviewArea').innerHTML = '';
 };
 
+/* ============================================================
+   REPORTS
+   ============================================================ */
 function renderReports(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
   const el = $('#pageContent');
@@ -3123,6 +3339,9 @@ function drawReports(){
   }
 }
 
+/* ============================================================
+   ACTIVITY LOG
+   ============================================================ */
 const ACT_TYPE_META = {
   sale_created:  { label:'Sale Created', icon:'🛒', cls:'act-type-sale' },
   sale_edited:   { label:'Sale Edited', icon:'✏️', cls:'act-type-sale_edit' },
@@ -3206,8 +3425,17 @@ function filteredActivities(){
   if (State.activitySearch) {
     const q = State.activitySearch.toLowerCase();
     list = list.filter(a=>{
-      const hay = [a.description, a.recordId, a.username, a.email, a.type].filter(Boolean).join(' ').toLowerCase();
-      return hay.includes(q);
+      const hay = [a.description, a.recordId, a.username, a.email, a.type, ...(a.diff ? Object.keys(a.diff) : [])].filter(Boolean).join(' ').toLowerCase();
+      if (hay.includes(q)) return true;
+      // Also search diff field values
+      if (a.diff && typeof a.diff === 'object') {
+        for (const k in a.diff) {
+          const fv = String(a.diff[k]?.from ?? '').toLowerCase();
+          const tv = String(a.diff[k]?.to ?? '').toLowerCase();
+          if (fv.includes(q) || tv.includes(q)) return true;
+        }
+      }
+      return false;
     });
   }
   list.sort((a,b)=>{
@@ -3230,11 +3458,12 @@ function drawActivityTable(){
   const rows = pageItems.map(a=>{
     const meta = actMeta(a.type);
     const t = a.timestampLocal || a.timestamp;
+    const diffCount = a.diff ? Object.keys(a.diff).length : 0;
     return `<tr class="act-row" onclick="viewActivityDetails('${a.id}')">
       <td data-label="Time">${fmtDate(t)}<br><small style="color:var(--muted)">${fmtTime(t)}</small></td>
       <td data-label="User"><div class="act-user"><b>${esc(a.username||'—')}</b><small>${esc(a.role||'')}</small></div></td>
       <td data-label="Activity"><span class="act-type-pill ${meta.cls}">${meta.icon} ${meta.label}</span></td>
-      <td data-label="Description">${esc(a.description||'')}${a.recordId?`<br><small style="color:var(--muted);font-family:ui-monospace,monospace">${esc(a.recordId.slice(-12))}</small>`:''}</td>
+      <td data-label="Description">${esc(a.description||'')}${a.recordId?`<br><small style="color:var(--muted);font-family:ui-monospace,monospace">${esc(a.recordId.slice(-12))}</small>`:''}${diffCount?`<br><small style="color:var(--orange);font-weight:700">📝 ${diffCount} field${diffCount===1?'':'s'} changed</small>`:''}</td>
     </tr>`;
   }).join('');
   const perPageOptions = [10,20,30,40,50].map(n=>`<option value="${n}" ${n===State.activityPerPage?'selected':''}>${n} / page</option>`).join('');
@@ -3262,16 +3491,42 @@ window.activityGoToPage = (p)=>{
   drawActivityTable();
 };
 window.activitySetPerPage = (v)=>{ State.activityPerPage = Number(v)||10; State.activityPage = 1; drawActivityTable(); };
+
 window.viewActivityDetails = (id)=>{
   const a = State.activities[id]; if (!a) return;
   const meta = actMeta(a.type);
   const t = a.timestampLocal || a.timestamp;
+  let diffHTML = '';
+  if (a.diff && typeof a.diff === 'object' && Object.keys(a.diff).length) {
+    const keys = FIELD_ORDER.filter(k => k in a.diff);
+    // append any diff keys not in FIELD_ORDER
+    Object.keys(a.diff).forEach(k => { if (!keys.includes(k)) keys.push(k); });
+    diffHTML = `<div style="margin-top:16px">
+      <div style="font-weight:800;color:var(--brown);font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Changes (${keys.length})</div>
+      <table class="diff-table">
+        <thead><tr><th>Field</th><th>Old Value</th><th>New Value</th></tr></thead>
+        <tbody>
+          ${keys.map(k=>{
+            const d = a.diff[k] || {};
+            const label = FIELD_LABELS[k] || k;
+            const oldV = normalizeVal(k, d.from ?? '');
+            const newV = normalizeVal(k, d.to ?? '');
+            return `<tr>
+              <td class="d-field">${esc(label)}</td>
+              <td><span class="d-old">${esc(oldV || '—')}</span></td>
+              <td><span class="d-new">${esc(newV || '—')}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
   let detailsHTML = '';
-  if (a.details && typeof a.details === 'object') {
-    try { detailsHTML = `<div style="margin-top:14px">
-      <div style="font-weight:800;color:var(--brown);font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Details</div>
+  if (a.details && typeof a.details === 'object' && Object.keys(a.details).length) {
+    detailsHTML = `<div style="margin-top:14px">
+      <div style="font-weight:800;color:var(--brown);font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Additional Details</div>
       <pre class="act-detail-pre">${esc(JSON.stringify(a.details, null, 2))}</pre>
-    </div>`; } catch(e){}
+    </div>`;
   }
   openModal('Activity Details', `
     <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px"><span class="act-type-pill ${meta.cls}">${meta.icon} ${meta.label}</span></div>
@@ -3283,10 +3538,14 @@ window.viewActivityDetails = (id)=>{
       ${a.recordId?`<div><b>Record ID:</b> <code style="background:var(--cream);padding:1px 5px;border-radius:4px;font-size:11.5px">${esc(a.recordId)}</code></div>`:''}
       <div><b>Activity ID:</b> <code style="background:var(--cream);padding:1px 5px;border-radius:4px;font-size:11.5px">${esc(id)}</code></div>
     </div>
+    ${diffHTML}
     ${detailsHTML}
   `, `<button class="btn btn-ghost" onclick="closeModal()">Close</button>`);
 };
 
+/* ============================================================
+   BUSINESS DAY TAB
+   ============================================================ */
 function renderClosing(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
   const el = $('#pageContent');
