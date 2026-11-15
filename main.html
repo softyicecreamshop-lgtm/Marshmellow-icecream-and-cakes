@@ -145,7 +145,7 @@ label.field>span{display:block;font-size:12.5px;font-weight:700;color:var(--brow
 .qa-btn.c1 .qic{background:linear-gradient(135deg,var(--orange),var(--orange-3));color:#fff;box-shadow:0 6px 16px rgba(255,152,47,.3)}
 .qa-btn.c2 .qic{background:linear-gradient(135deg,var(--teal),#3DCEC6);color:#fff;box-shadow:0 6px 16px rgba(15,168,160,.3)}
 .qa-btn.c3 .qic{background:linear-gradient(135deg,var(--pink),#F98AB0);color:#fff;box-shadow:0 6px 16px rgba(242,95,139,.3)}
-.qa-btn.c4 .qic{background:linear-gradient(135deg,var(--violet),#A79BF0));color:#fff;box-shadow:0 6px 16px rgba(124,108,217,.3)}
+.qa-btn.c4 .qic{background:linear-gradient(135deg,var(--violet),#A79BF0);color:#fff;box-shadow:0 6px 16px rgba(124,108,217,.3)}
 .qa-btn.c5 .qic{background:linear-gradient(135deg,var(--gold),#F2C95F);color:#fff;box-shadow:0 6px 16px rgba(227,178,60,.3)}
 .qa-btn.c6 .qic{background:linear-gradient(135deg,var(--brown),#B98055);color:#fff;box-shadow:0 6px 16px rgba(147,96,47,.3)}
 .qa-btn:hover .qic{transform:scale(1.08) rotate(-4deg)}
@@ -301,7 +301,12 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .filter-bar select.input{max-width:180px}
 @media(max-width:520px){.filter-bar .input,.filter-bar select.input,.filter-bar .btn{max-width:none;flex:1 1 auto;min-width:0}}
 #receiptPrint{display:none}
-@media print{body *{visibility:hidden}#receiptPrint,#receiptPrint *{visibility:visible}#receiptPrint{display:block;position:absolute;left:0;top:0;width:100%;padding:20px;font-family:monospace}}
+@media print{
+  body *{visibility:hidden}
+  #receiptPrint,#receiptPrint *{visibility:visible}
+  #receiptPrint{display:block;position:absolute;left:0;top:0;width:100%}
+  @page { size: A4; margin: 12mm; }
+}
 #sidebarBackdrop{position:fixed;inset:0;background:rgba(45,29,17,.45);backdrop-filter:blur(2px);z-index:99;display:none}
 #sidebarBackdrop.show{display:block}
 @media(max-width:900px){.sidebar{transform:translateX(-100%);box-shadow:var(--shadow-lg);width:min(280px,80vw)}.sidebar.open{transform:none}.main{margin-left:0}.topbar .menu-btn{display:flex}.content{padding:16px}.page-title{font-size:18px!important}}
@@ -395,7 +400,6 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .act-user b{font-size:13px;color:var(--dark)}
 .act-user small{font-size:11px;color:var(--muted)}
 
-/* Diff table */
 .diff-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
 .diff-table thead th{background:var(--cream-2);color:var(--brown);font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:9px 10px;text-align:left;border-bottom:1px solid var(--line-2)}
 .diff-table td{padding:9px 10px;border-bottom:1px solid var(--line-2);vertical-align:top;word-break:break-word}
@@ -444,6 +448,10 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 .sub-tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--cream-2);padding:6px;border-radius:var(--r-sm);border:1px solid var(--line-2);overflow-x:auto}
 .sub-tab{padding:10px 18px;border-radius:9px;font-weight:700;font-size:13px;color:var(--brown);white-space:nowrap;flex-shrink:0;transition:.15s;background:transparent}
 .sub-tab.active{background:#fff;color:var(--orange);box-shadow:var(--shadow-sm)}
+
+/* Sale action buttons */
+.sale-actions{display:flex;gap:5px;flex-wrap:wrap}
+.sale-actions .btn-sm{padding:6px 10px;min-height:32px;font-size:12px}
 </style>
 </head>
 <body>
@@ -466,7 +474,7 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
     </div>
     <nav id="mainNav"></nav>
     <div class="sb-footer">
-      <span class="dot"></span>Portal v7.2<br>
+      <span class="dot"></span>Portal v7.3<br>
       <span style="font-size:10.5px">Internal use only</span>
     </div>
   </aside>
@@ -537,6 +545,8 @@ const State = {
   orderPay:'Cash', orderDiscount:0, orderNote:'', orderDate:'', orderTime:'',
   orderPage:1, orderPerPage:10, orderDateFilterMode:'today', orderCustomDate:'',
   editingOrderId:null, editingOrder:null,
+  // Sale edit state
+  editingSaleId:null, editingSale:null,
   salesPage:1, salesPerPage:10, salesPayFilter:'All', salesSearch:'', salesDate:undefined,
   dashboardOrdersPage:1, dashboardOrdersPerPage:10,
   repFromDate:'', repToDate:'',
@@ -602,8 +612,6 @@ function fmtDuration(ms){
 
 /* ============================================================
    ACTIVITY DIFF HELPERS
-   Build a {field: {from, to}} object by comparing before/after objects.
-   Only "meaningful" fields are captured. Order defined in FIELD_ORDER.
    ============================================================ */
 const FIELD_ORDER = [
   'name','price','stock','minStock','active','image','description',
@@ -648,7 +656,7 @@ function buildDiff(before={}, after={}){
 }
 
 function summarizeItems(items){
-  return (items||[]).map(i=>`${i.productName} ×${i.qty}`).join(', ');
+  return (items||[]).map(i=>`${i.productName}${i.subcategoryName?' ('+i.subcategoryName+')':''} ×${i.qty}`).join(', ');
 }
 
 /* ============================================================
@@ -2119,23 +2127,18 @@ window.saveEditedOrder = async ()=>{
   const discount = Math.min(Math.max(0, Number(o.discount)||0), subtotal);
   const total = subtotal - discount;
 
-  // snapshot the before
   const before = State.orders[o.orderId] || {};
   const beforeSnapshot = {
-    customerName: before.customerName,
-    customerPhone: before.customerPhone,
-    scheduledDate: before.scheduledDate,
-    scheduledTime: before.scheduledTime,
+    customerName: before.customerName, customerPhone: before.customerPhone,
+    scheduledDate: before.scheduledDate, scheduledTime: before.scheduledTime,
     subtotal: before.subtotal, discount: before.discount, total: before.total,
     paymentMethod: before.paymentMethod,
     itemsSummary: summarizeItems(before.items),
     note: before.note
   };
   const afterSnapshot = {
-    customerName: o.customerName || 'Walk-in',
-    customerPhone: o.customerPhone || '',
-    scheduledDate: o.scheduledDate,
-    scheduledTime: o.scheduledTime,
+    customerName: o.customerName || 'Walk-in', customerPhone: o.customerPhone || '',
+    scheduledDate: o.scheduledDate, scheduledTime: o.scheduledTime,
     subtotal, discount, total,
     paymentMethod: o.paymentMethod,
     itemsSummary: summarizeItems(o.items),
@@ -2159,10 +2162,8 @@ window.saveEditedOrder = async ()=>{
     });
     const diff = buildDiff(beforeSnapshot, afterSnapshot);
     await recordActivity({
-      type:'order_edited',
-      description:'Edited order '+((o.orderId||'').slice(-8)),
-      recordId: o.orderId,
-      diff
+      type:'order_edited', description:'Edited order '+((o.orderId||'').slice(-8)),
+      recordId: o.orderId, diff
     });
     toast('Order updated');
     State.editingOrder = null; State.editingOrderId = null;
@@ -2288,8 +2289,7 @@ window.confirmCancelOrder = (id)=>{
       if (!tx.committed) { toast('Order already processed','err'); return; }
       await update(ref(db,'orders/'+id), { cancelledAt: nowISO(), cancelledBy: State.user.uid });
       await recordActivity({
-        type:'order_cancelled',
-        description:'Cancelled order '+((o.orderId||id).slice(-8)),
+        type:'order_cancelled', description:'Cancelled order '+((o.orderId||id).slice(-8)),
         recordId: id,
         diff: buildDiff({ status:'pending' }, { status:'cancelled' })
       });
@@ -2301,7 +2301,7 @@ window.confirmCancelOrder = (id)=>{
 };
 
 /* ============================================================
-   SALES DATA
+   SALES DATA (with Edit + Delete + A4 Print)
    ============================================================ */
 function renderSales(){
   const el = $('#pageContent');
@@ -2365,12 +2365,21 @@ function drawSalesTable(){
   const rows = pageItems.map(s=>{
     const pm = s.paymentMethod || 'Cash';
     const typeBadge = s.type === 'scheduled_order' ? '<span class="badge badge-teal" style="font-size:10px">Order</span>' : '';
+    const editedBadge = s.lastModifiedAt ? '<span class="badge badge-gold" style="font-size:9.5px">Edited</span>' : '';
     return `<tr class="${pm==='Pending'?'row-pending':''}">
-      <td data-label="Date">${fmtDate(s.businessDate||s.date)}<br><small style="color:var(--muted)">${fmtTime(s.dateTime)}</small></td>
+      <td data-label="Date">${fmtDate(s.businessDate||s.date)}<br><small style="color:var(--muted)">${fmtTime(s.dateTime)}</small> ${editedBadge}</td>
       <td data-label="Customer">${typeBadge} ${esc(s.customerName||'Walk-in')}</td>
-      <td data-label="Items">${(s.items||[]).map(i=>`${esc(i.productName)} ×${i.qty}`).join('<br>')}</td>
+      <td data-label="Items">${(s.items||[]).map(i=>`${esc(i.productName)}${i.subcategoryName?' ('+esc(i.subcategoryName)+')':''} ×${i.qty}`).join('<br>')}</td>
       <td data-label="Payment">${paymentBadge(pm)}</td>
       <td data-label="Total" class="r mono"><b>${fmtINR(s.total)}</b></td>
+      <td data-label="Actions">
+        <div class="sale-actions">
+          <button class="btn btn-ghost btn-sm" onclick="confirmEditSale('${s.id}')" title="Edit">✏️</button>
+          <button class="btn btn-ghost btn-sm" onclick="printSaleA4('${s.id}')" title="Print / PDF">🖨️</button>
+          <button class="btn btn-ghost btn-sm" onclick="viewSaleDetails('${s.id}')" title="View">👁️</button>
+          <button class="btn btn-ghost btn-sm" onclick="confirmDeleteSale('${s.id}')" title="Delete" style="color:var(--red)">🗑️</button>
+        </div>
+      </td>
     </tr>`;
   }).join('');
   const perPageOptions = [10,20,30,40,50].map(n=>`<option value="${n}" ${n===State.salesPerPage?'selected':''}>${n} / page</option>`).join('');
@@ -2382,13 +2391,13 @@ function drawSalesTable(){
       ${State.salesPayFilter!=='All'?`<span>Filter: <b>${esc(State.salesPayFilter)}</b></span>`:''}
     </div>
     <div class="tbl-wrap"><table class="data">
-      <thead><tr><th>Date / Time</th><th>Customer</th><th>Items</th><th>Payment</th><th class="r">Total</th></tr></thead>
+      <thead><tr><th>Date / Time</th><th>Customer</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Actions</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
     <div class="pagination">
       <div class="pg-info">Showing <b>${start+1}–${Math.min(start+State.salesPerPage, total)}</b> of <b>${total}</b> records</div>
       <div class="pg-controls">
-        <select class="pg-perpage" onchange="salesSetPerPage(this.value)">${perPageOptions}</select>
+        <select class="pg-perpage" onchange="salesSetPerPage(this.value)">${pageBtns && perPageOptions}</select>
         <button class="pg-btn" onclick="salesGoToPage(${State.salesPage-1})" ${State.salesPage<=1?'disabled':''}>← Prev</button>
         ${pageBtns}
         <button class="pg-btn" onclick="salesGoToPage(${State.salesPage+1})" ${State.salesPage>=totalPages?'disabled':''}>Next →</button>
@@ -2402,6 +2411,467 @@ window.salesGoToPage = (p)=>{
   drawSalesTable();
 };
 window.salesSetPerPage = (v)=>{ State.salesPerPage = Number(v)||10; State.salesPage = 1; drawSalesTable(); };
+
+/* ---------- Sale Details ---------- */
+window.viewSaleDetails = (id)=>{
+  const s = State.sales[id]; if (!s) return;
+  const itemsHTML = (s.items||[]).map(it=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line-2);font-size:13px">
+    <span>${esc(it.productName)}${it.subcategoryName?' <small style="color:var(--violet)">('+esc(it.subcategoryName)+')</small>':''} ×${it.qty}</span>
+    <b class="mono">${fmtINR(it.price*it.qty)}</b>
+  </div>`).join('');
+  openModal('Sale Details', `
+    <div style="margin-bottom:12px;font-size:13px;color:var(--brown);line-height:1.7">
+      <div><b>Sale ID:</b> ${esc(id)}</div>
+      <div><b>Business Date:</b> ${fmtDate(s.businessDate||s.date)} · ${fmtTime(s.dateTime)}</div>
+      <div><b>Customer:</b> ${esc(s.customerName||'Walk-in')}</div>
+      <div><b>Payment:</b> ${paymentBadge(s.paymentMethod)}</div>
+      <div><b>Staff:</b> ${esc(s.createdByName||'—')}</div>
+      ${s.lastModifiedAt?`<div style="color:var(--gold);font-weight:700"><b>Last Edited:</b> ${fmtDateTime(s.lastModifiedAt)}${s.lastModifiedByName?' by '+esc(s.lastModifiedByName):''}</div>`:''}
+    </div>
+    <div style="margin-bottom:12px">${itemsHTML}</div>
+    <div style="padding:10px 12px;background:var(--cream-2);border-radius:var(--r-sm);font-size:13.5px">
+      <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Subtotal</span><span class="mono">${fmtINR(s.subtotal!=null?s.subtotal:(Number(s.total)||0)+(Number(s.discount)||0))}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--red)"><span>Discount</span><span class="mono">− ${fmtINR(s.discount||0)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0 0;border-top:1px solid var(--line);margin-top:6px;font-weight:800;font-family:var(--f-display);font-size:15px"><span>Total</span><span class="mono">${fmtINR(s.total)}</span></div>
+    </div>
+    ${s.note?`<div style="margin-top:12px;padding:10px 12px;background:#FEF3C7;border-radius:var(--r-sm);font-size:13px;color:#92400E"><b>📝 Note:</b><br>${esc(s.note)}</div>`:''}
+  `, `<button class="btn btn-ghost" onclick="closeModal()">Close</button>
+      <button class="btn btn-primary" onclick="closeModal();printSaleA4('${id}')">🖨️ Print A4</button>`);
+};
+
+/* ---------- EDIT SALE ---------- */
+window.confirmEditSale = (id)=>{
+  const s = State.sales[id]; if (!s) return;
+  openModal('Edit Sale?',
+    `<p style="font-size:14px;line-height:1.65;color:var(--brown)">Any changes you make will update the existing sale record and adjust inventory by the difference.</p>
+     <div style="margin-top:12px;padding:12px 14px;background:var(--cream-2);border-radius:var(--r-sm);font-size:12.5px;color:var(--brown);line-height:1.6">
+       <b>Sale:</b> ${esc(id.slice(-8))} · ${fmtINR(s.total)}<br>
+       <b>Customer:</b> ${esc(s.customerName||'Walk-in')}<br>
+       <b>Business Day:</b> ${fmtDate(s.businessDate||s.date)}
+     </div>`,
+    `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" id="confirmEditSaleBtn">Yes, Edit Sale</button>`);
+  $('#confirmEditSaleBtn').onclick = ()=>{ closeModal(); openEditSale(id); };
+};
+
+window.openEditSale = (id)=>{
+  const s = State.sales[id]; if (!s) return;
+  State.editingSaleId = id;
+  State.editingSale = {
+    ...s,
+    items: (s.items||[]).map(i=>({...i})),
+    discount: Number(s.discount) || 0,
+  };
+  renderEditSaleModal();
+};
+
+function renderEditSaleModal(){
+  const s = State.editingSale; if (!s) return;
+  const subtotal = s.items.reduce((a,i)=>a+i.price*i.qty,0);
+  const discount = Math.min(Math.max(0, Number(s.discount)||0), subtotal);
+  const total = subtotal - discount;
+  const lineHTML = s.items.length ? s.items.map((i,idx)=>`
+    <div style="padding:10px 11px;border-radius:9px;background:var(--cream-2);margin-bottom:6px;border:1px solid var(--line-2)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:12.5px;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(i.productName)}${i.subcategoryName?' · '+esc(i.subcategoryName):''}</div>
+          <div style="font-size:10.5px;color:var(--muted);font-weight:600">Qty ${i.qty} × ${fmtINR(i.price)}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;background:#fff;border-radius:18px;padding:2px;border:1.5px solid var(--line)">
+          <button style="width:26px;height:26px;border-radius:50%;background:var(--cream);font-weight:800" onclick="editSaleQty(${idx},-1)">−</button>
+          <span style="min-width:22px;text-align:center;font-weight:800;font-size:12.5px">${i.qty}</span>
+          <button style="width:26px;height:26px;border-radius:50%;background:var(--cream);font-weight:800" onclick="editSaleQty(${idx},1)">+</button>
+        </div>
+        <button class="icon-btn danger" onclick="editSaleRemoveLine(${idx})" title="Remove">✕</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+        <span style="font-size:10.5px;color:var(--muted);font-weight:700">Price ₹</span>
+        <input type="number" min="0" step="1" value="${Number(i.price)||0}" onchange="editSalePrice(${idx},this.value)" style="width:90px;padding:5px 8px;border:1.5px solid var(--line);border-radius:7px;font-weight:700;font-size:12px;text-align:right">
+      </div>
+    </div>`).join('') : '<div class="empty" style="padding:20px"><span class="em-icon">🛒</span>No items. Add products below.</div>';
+  openModal('Edit Sale · ' + (s.saleId||'').slice(-8), `
+    <div style="margin-bottom:10px;font-size:12px;color:var(--brown);line-height:1.5">
+      <b>Business Date:</b> ${fmtDate(s.businessDate||s.date)} · <b>Customer:</b> ${esc(s.customerName||'Walk-in')}
+    </div>
+    <div style="margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-weight:800;color:var(--brown);font-size:12px;text-transform:uppercase;letter-spacing:.6px">Items (${s.items.length})</div>
+      <button class="btn btn-ghost btn-sm" onclick="openAddProductToEditSale()">➕ Add Product</button>
+    </div>
+    <div style="max-height:220px;overflow-y:auto;margin-bottom:12px">${lineHTML}</div>
+
+    <div style="padding:12px 14px;background:#fff;border-radius:var(--r-sm);border:1px solid var(--line-2);margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px"><span>Subtotal</span><b class="mono">${fmtINR(subtotal)}</b></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px">
+        <span>Discount</span>
+        <div class="discount-input-wrap"><span class="cur">₹</span>
+          <input type="number" min="0" step="1" value="${discount}" oninput="editSaleDiscount(this.value)" onchange="editSaleDiscount(this.value)" id="esDiscountInput">
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0 0;border-top:1px dashed var(--line);margin-top:6px;font-family:var(--f-display);font-size:16px;font-weight:800"><span>Total</span><b class="mono" style="color:var(--orange)">${fmtINR(total)}</b></div>
+    </div>
+
+    <label class="field"><span>Payment Method</span>
+      <div class="pay-methods" id="esPayMethods" style="margin-bottom:0">
+        ${['Cash','UPI','Card','Pending'].map(pm=>`<button type="button" data-pay="${pm}" class="${(s.paymentMethod||'Cash')===pm?'active':''}" onclick="editSaleSetPay('${pm}',this)">${pm==='Cash'?'💵':pm==='UPI'?'📱':pm==='Card'?'💳':'⏳'} ${pm}</button>`).join('')}
+      </div>
+    </label>
+
+    <label class="field" style="margin-bottom:0"><span>Order Note</span>
+      <textarea class="cart-note" style="margin-bottom:0" oninput="State.editingSale.note=this.value">${esc(s.note||'')}</textarea>
+    </label>
+  `, `<button class="btn btn-ghost" onclick="cancelEditSale()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditedSale()">💾 Save Changes</button>`);
+}
+window.editSaleQty = (idx, delta)=>{
+  const s = State.editingSale; if (!s || !s.items[idx]) return;
+  const line = s.items[idx];
+  if (delta > 0) {
+    const p = State.products[line.pid];
+    const avail = p ? productStock(p) : line.qty;
+    const origQty = findOriginalSaleQty(line.pid);
+    const effectiveAvail = avail + origQty;
+    if (line.qty + delta > effectiveAvail) { toast('Only ' + effectiveAvail + ' available for this sale', 'err'); return; }
+  }
+  line.qty = Math.max(0, line.qty + delta);
+  if (line.qty === 0) s.items.splice(idx, 1);
+  renderEditSaleModal();
+};
+window.editSaleRemoveLine = (idx)=>{ const s = State.editingSale; if(!s) return; s.items.splice(idx, 1); renderEditSaleModal(); };
+window.editSalePrice = (idx, val)=>{
+  const s = State.editingSale; if(!s) return;
+  s.items[idx].price = Math.max(0, Number(val)||0);
+  renderEditSaleModal();
+};
+window.editSaleDiscount = (val)=>{
+  const s = State.editingSale; if (!s) return;
+  const subtotal = s.items.reduce((a,i)=>a+i.price*i.qty,0);
+  let d = Number(val); if (isNaN(d) || d < 0) d = 0;
+  if (d > subtotal) { d = subtotal; const inp = document.getElementById('esDiscountInput'); if (inp) inp.value = d; }
+  s.discount = d;
+  renderEditSaleModal();
+};
+window.editSaleSetPay = (pm, btn)=>{
+  const s = State.editingSale; if (!s) return;
+  s.paymentMethod = pm;
+  $$('#esPayMethods button').forEach(b=>b.classList.toggle('active', b===btn));
+};
+function findOriginalSaleQty(pid){
+  const orig = State.sales[State.editingSale?.saleId];
+  if (!orig) return 0;
+  const line = (orig.items||[]).find(i=>i.pid===pid);
+  return line ? line.qty : 0;
+}
+window.openAddProductToEditSale = ()=>{
+  const s = State.editingSale; if (!s) return;
+  const rows = Object.entries(State.products).filter(([id,p])=>p.active!==false && productStock(p) > 0)
+    .map(([id,p])=>({ id, p, cat: State.categories[p.categoryId]?.name||'', sub: p.subcategoryId?subName(p.subcategoryId):'', stock: productStock(p), price: productPrice(p) }))
+    .sort((a,b)=> (a.cat+a.sub+a.p.name).localeCompare(b.cat+b.sub+b.p.name));
+  if (!rows.length) { toast('No products with stock available','err'); return; }
+  const listHTML = rows.map(r=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--cream-2);border-radius:9px;margin-bottom:6px;border:1px solid var(--line-2)">
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:700;font-size:12.5px;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.p.name)}</div>
+      <div style="font-size:10.5px;color:var(--muted);font-weight:600">${esc(r.cat)}${r.sub?' · '+esc(r.sub):''} · Stock ${r.stock}</div>
+    </div>
+    <div style="font-weight:800;color:var(--orange);font-size:12.5px;font-family:var(--f-display)">${fmtINR(r.price)}</div>
+    <button class="btn btn-primary btn-sm" onclick="editSaleAddLine('${r.id}')">Add</button>
+  </div>`).join('');
+  openModal('Add Product', `<div style="max-height:55vh;overflow-y:auto">${listHTML}</div>`,
+    `<button class="btn btn-ghost" onclick="renderEditSaleModal()">← Back</button>`);
+};
+window.editSaleAddLine = (pid)=>{
+  const s = State.editingSale; if (!s) return;
+  const p = State.products[pid]; if (!p) return;
+  const existing = s.items.find(i=>i.pid===pid);
+  const avail = productStock(p);
+  if (existing) {
+    if (existing.qty + 1 > avail + findOriginalSaleQty(pid)) { toast('Not enough stock', 'err'); return; }
+    existing.qty += 1;
+  } else {
+    if (avail < 1) { toast('Out of stock','err'); return; }
+    const cat = State.categories[p.categoryId] || {name:'Other'};
+    const sub = p.subcategoryId ? subName(p.subcategoryId) : (isLegacyProduct(p)?'General':'');
+    s.items.push({ pid, productName:p.name, categoryId:p.categoryId, categoryName:cat.name, subcategoryId:p.subcategoryId||'', subcategoryName:sub, price:productPrice(p), qty:1 });
+  }
+  renderEditSaleModal();
+};
+window.cancelEditSale = ()=>{ State.editingSale = null; State.editingSaleId = null; closeModal(); };
+
+window.saveEditedSale = async ()=>{
+  if (State.busy) return;
+  const s = State.editingSale; if (!s) return;
+  if (!s.items.length) { toast('Sale must have at least one item','err'); return; }
+  const saleId = s.saleId;
+  const original = State.sales[saleId];
+  if (!original) { toast('Original sale not found','err'); return; }
+  const subtotal = s.items.reduce((a,i)=>a+i.price*i.qty,0);
+  const discount = Math.min(Math.max(0, Number(s.discount)||0), subtotal);
+  const total = subtotal - discount;
+
+  // build qty delta per product: delta = new - original
+  // positive delta → deduct more stock; negative delta → restore stock
+  const origMap = {}; (original.items||[]).forEach(i=>{ origMap[i.pid] = (origMap[i.pid]||0)+i.qty; });
+  const editMap = {}; s.items.forEach(i=>{ editMap[i.pid] = (editMap[i.pid]||0)+i.qty; });
+  const allPids = new Set([...Object.keys(origMap), ...Object.keys(editMap)]);
+  const deltas = [];
+  for (const pid of allPids) {
+    const oq = origMap[pid]||0;
+    const eq = editMap[pid]||0;
+    const d = eq - oq;
+    if (d !== 0) deltas.push({ pid, delta: d });
+  }
+  // validate positive deltas against available stock
+  for (const d of deltas) {
+    if (d.delta > 0) {
+      const p = State.products[d.pid];
+      const avail = p ? productStock(p) : 0;
+      if (avail < d.delta) { toast(`Insufficient stock for ${p?.name||d.pid} (need ${d.delta} more)`, 'err'); return; }
+    }
+  }
+
+  const beforeSnapshot = {
+    itemsSummary: summarizeItems(original.items),
+    subtotal: original.subtotal, discount: original.discount, total: original.total,
+    paymentMethod: original.paymentMethod, note: original.note,
+    customerName: original.customerName
+  };
+  const afterSnapshot = {
+    itemsSummary: summarizeItems(s.items),
+    subtotal, discount, total,
+    paymentMethod: s.paymentMethod,
+    note: s.note || '',
+    customerName: s.customerName || 'Walk-in'
+  };
+
+  State.busy = true; showLoading(true);
+  const applied = [];
+  try {
+    // 1) Apply stock deltas atomically
+    for (const d of deltas) {
+      const p = State.products[d.pid];
+      const from = p ? productStock(p) : 0;
+      const res = await adjustProductStock(d.pid, -d.delta, {
+        productName: p?.name || d.pid, from,
+        reason: 'Edit sale ' + saleId, refId: saleId
+      });
+      if (!res.ok) throw new Error('Stock update failed for ' + (p?.name || d.pid));
+      applied.push({ pid: d.pid, delta: d.delta });
+    }
+
+    // 2) Persist sale update
+    await update(ref(db,'sales/'+saleId), {
+      items: s.items.map(i=>({ pid:i.pid, productName:i.productName, categoryId:i.categoryId, categoryName:i.categoryName, subcategoryId:i.subcategoryId||'', subcategoryName:i.subcategoryName||'', price:i.price, qty:i.qty })),
+      subtotal, discount, total,
+      paymentMethod: s.paymentMethod,
+      payments: { [s.paymentMethod]: total },
+      note: s.note || '',
+      customerName: s.customerName || 'Walk-in',
+      lastModifiedAt: nowISO(),
+      lastModifiedBy: State.user.uid,
+      lastModifiedByName: State.profile?.name || '',
+    });
+
+    // 3) Adjust customer total if linked
+    if (original.customerId) {
+      const c = State.customers[original.customerId] || {};
+      const deltaTotal = total - (Number(original.total)||0);
+      if (deltaTotal !== 0) {
+        await update(ref(db,'customers/'+original.customerId), {
+          totalPurchases: Math.max(0, (Number(c.totalPurchases)||0) + deltaTotal)
+        });
+      }
+    }
+
+    // 4) Log
+    await recordActivity({
+      type:'sale_edited',
+      description:'Edited sale '+saleId.slice(-8)+' · '+fmtINR(total),
+      recordId: saleId,
+      diff: buildDiff(beforeSnapshot, afterSnapshot),
+      details: { stockDeltas: deltas }
+    });
+
+    toast('Sale updated');
+    State.editingSale = null; State.editingSaleId = null;
+    closeModal();
+  } catch (err) {
+    // rollback
+    for (const a of applied) {
+      try { await adjustProductStock(a.pid, a.delta, { reason:'Rollback edit', refId:'rollback-edit-'+saleId }); } catch(_){}
+    }
+    toast('Failed: ' + (err.message || err.code || 'unknown'),'err');
+  } finally { State.busy = false; showLoading(false); }
+};
+
+/* ---------- DELETE SALE ---------- */
+window.confirmDeleteSale = (id)=>{
+  const s = State.sales[id]; if (!s) return;
+  openModal('Delete Sale?',
+    `<p style="font-size:14px;line-height:1.65;color:var(--brown)">This will permanently delete the sale and <b>restore all items</b> to inventory.</p>
+     <div style="margin-top:12px;padding:12px 14px;background:#FFF5F5;border-radius:var(--r-sm);font-size:12.5px;color:var(--brown);line-height:1.6;border:1px solid #F5C0C0">
+       <b>Sale:</b> ${esc(id.slice(-8))} · ${fmtINR(s.total)}<br>
+       <b>Customer:</b> ${esc(s.customerName||'Walk-in')}<br>
+       <b>Items:</b> ${(s.items||[]).length}<br><br>
+       ⚠️ This action cannot be undone.
+     </div>`,
+    `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-danger" id="confirmDeleteSaleBtn">🗑️ Delete Sale</button>`);
+  $('#confirmDeleteSaleBtn').onclick = ()=>{ closeModal(); deleteSaleConfirmed(id); };
+};
+
+window.deleteSaleConfirmed = async (id)=>{
+  if (State.busy) return;
+  const s = State.sales[id]; if (!s) return;
+  State.busy = true; showLoading(true);
+  const restored = [];
+  try {
+    // 1) Restore stock atomically
+    for (const it of (s.items||[])) {
+      const p = State.products[it.pid];
+      const from = p ? productStock(p) : 0;
+      const res = await adjustProductStock(it.pid, it.qty, {
+        productName: it.productName, from,
+        reason: 'Sale deleted ' + id, refId: id
+      });
+      if (!res.ok) throw new Error('Stock restore failed for ' + it.productName);
+      restored.push({ pid: it.pid, qty: it.qty });
+    }
+    // 2) Delete sale record
+    await remove(ref(db,'sales/'+id));
+    // 3) Adjust customer total
+    if (s.customerId) {
+      const c = State.customers[s.customerId] || {};
+      await update(ref(db,'customers/'+s.customerId), {
+        totalPurchases: Math.max(0, (Number(c.totalPurchases)||0) - (Number(s.total)||0))
+      });
+    }
+    // 4) Log
+    await recordActivity({
+      type:'sale_deleted',
+      description:'Deleted sale '+id.slice(-8)+' · '+fmtINR(s.total),
+      recordId: id,
+      diff: buildDiff({
+        itemsSummary: summarizeItems(s.items),
+        subtotal: s.subtotal, discount: s.discount, total: s.total,
+        paymentMethod: s.paymentMethod,
+        customerName: s.customerName, note: s.note
+      }, {}),
+      details: { restoredItems: restored }
+    });
+    toast('Sale deleted · stock restored');
+  } catch (err) {
+    // rollback
+    for (const r of restored) {
+      try { await adjustProductStock(r.pid, -r.qty, { reason:'Rollback delete', refId:'rollback-del-'+id }); } catch(_){}
+    }
+    toast('Failed: ' + (err.message || err.code || 'unknown'),'err');
+  } finally { State.busy = false; showLoading(false); }
+};
+
+/* ---------- A4 PRINT / PDF ---------- */
+function buildA4ReceiptHtml(sale){
+  const subtotal = sale.subtotal != null ? Number(sale.subtotal) : (Number(sale.total)||0) + (Number(sale.discount)||0);
+  const discount = Number(sale.discount)||0;
+  const total = Number(sale.total)||0;
+  const orderRef = sale.orderId || sale.saleId;
+  const contactLine = sale.customerPhone ? `${esc(sale.customerName||'Walk-in')} · ${esc(sale.customerPhone)}` : esc(sale.customerName||'Walk-in');
+  const itemsRows = (sale.items||[]).map((it, idx)=>{
+    const lineTotal = Number(it.price||0) * Number(it.qty||0);
+    const variant = it.subcategoryName ? esc(it.subcategoryName) : '—';
+    return `<tr>
+      <td style="padding:8px 10px;border-bottom:1px solid #F0E4D2;text-align:center;font-size:10pt">${idx+1}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #F0E4D2;font-size:10pt">
+        <div style="font-weight:700;color:#49301F">${esc(it.productName)}</div>
+        ${it.categoryName?`<div style="font-size:9pt;color:#8C7862">${esc(it.categoryName)}</div>`:''}
+      </td>
+      <td style="padding:8px 10px;border-bottom:1px solid #F0E4D2;text-align:center;font-size:10pt;color:#7C6CD9;font-weight:600">${variant}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #F0E4D2;text-align:center;font-size:10pt">${Number(it.qty)||0}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #F0E4D2;text-align:right;font-size:10pt">${fmtINR(it.price)}</td>
+      <td style="padding:8px 10px;border-bottom:1px solid #F0E4D2;text-align:right;font-size:10pt;font-weight:700">${fmtINR(lineTotal)}</td>
+    </tr>`;
+  }).join('');
+  return `
+    <div style="max-width:186mm;margin:0 auto;padding:6mm;font-family:'Plus Jakarta Sans',Arial,sans-serif;color:#2D1D11;font-size:10.5pt;line-height:1.5">
+      <!-- Header -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #FF982F;padding-bottom:14px;margin-bottom:18px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FF982F,#F25F8B);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22pt;font-weight:800;">🍦</div>
+            <div>
+              <div style="font-size:20pt;font-weight:800;color:#49301F;line-height:1.1">Marshmallow</div>
+              <div style="font-size:9.5pt;color:#93602F;font-weight:700;letter-spacing:.8px">ICE CREAMS &amp; CAKES</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:22pt;font-weight:800;color:#FF982F;letter-spacing:-.5px;">INVOICE</div>
+          <div style="font-size:9.5pt;color:#8C7862;margin-top:2px;">Sales Order</div>
+        </div>
+      </div>
+
+      <!-- Meta block -->
+      <div style="display:flex;justify-content:space-between;gap:20px;margin-bottom:20px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;">
+          <div style="font-size:9pt;color:#8C7862;text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:6px;">Bill To</div>
+          <div style="font-size:11pt;font-weight:800;color:#49301F;">${esc(sale.customerName||'Walk-in')}</div>
+          ${sale.customerPhone?`<div style="font-size:10pt;color:#49301F;">${esc(sale.customerPhone)}</div>`:''}
+          ${sale.customerId?`<div style="font-size:9pt;color:#8C7862;">Customer ID: ${esc(String(sale.customerId).slice(-8))}</div>`:''}
+        </div>
+        <div style="min-width:260px;">
+          <table style="width:100%;font-size:10pt;border-collapse:collapse;">
+            <tr><td style="padding:3px 0;color:#8C7862;font-weight:700;">Order ID</td><td style="padding:3px 0;text-align:right;font-weight:800;color:#49301F;">#${esc(String(orderRef).slice(-12))}</td></tr>
+            <tr><td style="padding:3px 0;color:#8C7862;font-weight:700;">Date</td><td style="padding:3px 0;text-align:right;color:#49301F;">${fmtDate(sale.businessDate||sale.date)}</td></tr>
+            <tr><td style="padding:3px 0;color:#8C7862;font-weight:700;">Time</td><td style="padding:3px 0;text-align:right;color:#49301F;">${fmtTime(sale.dateTime)}</td></tr>
+            ${sale.businessDayId?`<tr><td style="padding:3px 0;color:#8C7862;font-weight:700;">Business Day</td><td style="padding:3px 0;text-align:right;color:#49301F;">${esc(String(sale.businessDayId).slice(-8))}</td></tr>`:''}
+            <tr><td style="padding:3px 0;color:#8C7862;font-weight:700;">Payment</td><td style="padding:3px 0;text-align:right;"><span style="display:inline-block;padding:2px 8px;border-radius:10px;background:${sale.paymentMethod==='Pending'?'#FEF3C7':'#E4F7F5'};color:${sale.paymentMethod==='Pending'?'#B45309':'#0FA8A0'};font-weight:800;font-size:9pt;">${esc(sale.paymentMethod||'Cash')}</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Items table -->
+      <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+        <thead>
+          <tr style="background:#FFF4E5;">
+            <th style="padding:10px;border-bottom:2px solid #FF982F;text-align:center;font-size:9pt;color:#93602F;letter-spacing:.5px;text-transform:uppercase;width:32px;">#</th>
+            <th style="padding:10px;border-bottom:2px solid #FF982F;text-align:left;font-size:9pt;color:#93602F;letter-spacing:.5px;text-transform:uppercase;">Product</th>
+            <th style="padding:10px;border-bottom:2px solid #FF982F;text-align:center;font-size:9pt;color:#93602F;letter-spacing:.5px;text-transform:uppercase;width:80px;">Size</th>
+            <th style="padding:10px;border-bottom:2px solid #FF982F;text-align:center;font-size:9pt;color:#93602F;letter-spacing:.5px;text-transform:uppercase;width:50px;">Qty</th>
+            <th style="padding:10px;border-bottom:2px solid #FF982F;text-align:right;font-size:9pt;color:#93602F;letter-spacing:.5px;text-transform:uppercase;width:80px;">Price</th>
+            <th style="padding:10px;border-bottom:2px solid #FF982F;text-align:right;font-size:9pt;color:#93602F;letter-spacing:.5px;text-transform:uppercase;width:90px;">Total</th>
+          </tr>
+        </thead>
+        <tbody>${itemsRows}</tbody>
+      </table>
+
+      <!-- Totals + Note -->
+      <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;">
+          ${sale.note?`<div style="padding:10px 12px;border-left:3px solid #E3B23C;background:#FBF1D6;font-size:9.5pt;color:#8A6B12;border-radius:6px;"><b>Note:</b> ${esc(sale.note)}</div>`:''}
+          ${sale.lastModifiedAt?`<div style="font-size:9pt;color:#8C7862;margin-top:8px;">Last edited ${fmtDateTime(sale.lastModifiedAt)}${sale.lastModifiedByName?' by '+esc(sale.lastModifiedByName):''}</div>`:''}
+        </div>
+        <div style="width:280px;">
+          <table style="width:100%;font-size:10.5pt;border-collapse:collapse;">
+            <tr><td style="padding:5px 0;color:#8C7862;">Subtotal</td><td style="padding:5px 0;text-align:right;font-weight:700;">${fmtINR(subtotal)}</td></tr>
+            ${discount?`<tr><td style="padding:5px 0;color:#E5484D;">Discount</td><td style="padding:5px 0;text-align:right;color:#E5484D;font-weight:700;">− ${fmtINR(discount)}</td></tr>`:''}
+            <tr><td style="padding:10px 0 6px;border-top:2px solid #FF982F;font-size:12pt;font-weight:800;color:#49301F;">Total</td><td style="padding:10px 0 6px;border-top:2px solid #FF982F;text-align:right;font-size:14pt;font-weight:800;color:#FF982F;">${fmtINR(total)}</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="margin-top:24px;padding-top:14px;border-top:1px solid #F0E4D2;text-align:center;font-size:9pt;color:#8C7862;">
+        <div style="font-weight:800;color:#93602F;font-size:10pt;margin-bottom:4px;">Thank you for your order!</div>
+        <div>Marshmallow Ice Creams &amp; Cakes · Internal Document</div>
+        <div style="margin-top:6px;">Generated ${fmtDateTime(nowISO())} by ${esc(State.profile?.name || State.user?.email || '—')}</div>
+      </div>
+    </div>`;
+}
+window.printSaleA4 = (id)=>{
+  const s = State.sales[id]; if (!s) return;
+  const rp = $('#receiptPrint');
+  rp.innerHTML = buildA4ReceiptHtml(s);
+  // Let DOM settle then print
+  setTimeout(()=>{ window.print(); }, 60);
+};
 
 /* ============================================================
    PRODUCTS
@@ -2529,12 +2999,7 @@ window.editCategory = (id)=>{
     if(!name){ toast('Name required','err'); return; }
     const before = { name: c.name };
     await update(ref(db,'categories/'+id), { name });
-    await recordActivity({
-      type:'category_edited',
-      description:'Renamed category to "'+name+'"',
-      recordId:id,
-      diff: buildDiff(before, { name })
-    });
+    await recordActivity({ type:'category_edited', description:'Renamed category to "'+name+'"', recordId:id, diff: buildDiff(before, { name }) });
     toast('Category updated'); closeModal();
   };
 };
@@ -2586,12 +3051,7 @@ window.editSubcategory = (sid)=>{
     if(!name){ toast('Name required','err'); return; }
     const before = { name: s.name };
     await update(ref(db,'subcategories/'+sid), { name });
-    await recordActivity({
-      type:'subcategory_edited',
-      description:'Renamed subcategory to "'+name+'"',
-      recordId:sid,
-      diff: buildDiff(before, { name })
-    });
+    await recordActivity({ type:'subcategory_edited', description:'Renamed subcategory to "'+name+'"', recordId:sid, diff: buildDiff(before, { name }) });
     toast('Subcategory updated'); closeModal();
   };
 };
@@ -2715,13 +3175,11 @@ window.openEditProduct = (pid)=>{
     const afterSnapshot = {
       name, price, stock, minStock, active, image, categoryName: catName, subcategoryName: subNameStr
     };
-    const diff = buildDiff(beforeSnapshot, afterSnapshot);
-    // If nothing besides category/subcat IDs changed but names did, that's captured via names
     await recordActivity({
       type:'product_edited',
       description:`Updated "${name}" in ${catName} → ${subNameStr}`,
       recordId:pid,
-      diff
+      diff: buildDiff(beforeSnapshot, afterSnapshot)
     });
     toast('Product updated'); closeModal();
   };
@@ -3145,9 +3603,7 @@ window.openEditExpense = (id)=>{
     await update(ref(db,'expenses/'+id), data);
     const afterSnapshot = { amount: amt, category: data.category, date: data.date, note: data.description };
     await recordActivity({
-      type:'expense_edited',
-      description:'Edited expense '+fmtINR(amt),
-      recordId:id,
+      type:'expense_edited', description:'Edited expense '+fmtINR(amt), recordId:id,
       diff: buildDiff(beforeSnapshot, afterSnapshot)
     });
     toast('Expense updated'); closeModal();
@@ -3345,6 +3801,7 @@ function drawReports(){
 const ACT_TYPE_META = {
   sale_created:  { label:'Sale Created', icon:'🛒', cls:'act-type-sale' },
   sale_edited:   { label:'Sale Edited', icon:'✏️', cls:'act-type-sale_edit' },
+  sale_deleted:  { label:'Sale Deleted', icon:'🗑️', cls:'act-type-sale_cancel' },
   sale_cancelled:{ label:'Sale Cancelled', icon:'🚫', cls:'act-type-sale_cancel' },
   order_created: { label:'Order Created', icon:'📋', cls:'act-type-order' },
   order_edited:  { label:'Order Edited', icon:'✏️', cls:'act-type-order' },
@@ -3427,7 +3884,6 @@ function filteredActivities(){
     list = list.filter(a=>{
       const hay = [a.description, a.recordId, a.username, a.email, a.type, ...(a.diff ? Object.keys(a.diff) : [])].filter(Boolean).join(' ').toLowerCase();
       if (hay.includes(q)) return true;
-      // Also search diff field values
       if (a.diff && typeof a.diff === 'object') {
         for (const k in a.diff) {
           const fv = String(a.diff[k]?.from ?? '').toLowerCase();
@@ -3499,7 +3955,6 @@ window.viewActivityDetails = (id)=>{
   let diffHTML = '';
   if (a.diff && typeof a.diff === 'object' && Object.keys(a.diff).length) {
     const keys = FIELD_ORDER.filter(k => k in a.diff);
-    // append any diff keys not in FIELD_ORDER
     Object.keys(a.diff).forEach(k => { if (!keys.includes(k)) keys.push(k); });
     diffHTML = `<div style="margin-top:16px">
       <div style="font-weight:800;color:var(--brown);font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Changes (${keys.length})</div>
@@ -3544,7 +3999,7 @@ window.viewActivityDetails = (id)=>{
 };
 
 /* ============================================================
-   BUSINESS DAY TAB
+   BUSINESS DAY TAB (Admin only)
    ============================================================ */
 function renderClosing(){
   if(!isAdmin()){ toast('Access denied','err'); navigateTo('dashboard'); return; }
