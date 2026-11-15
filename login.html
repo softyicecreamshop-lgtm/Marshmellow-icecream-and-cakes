@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+<meta name="theme-color" content="#FF982F" />
+<title>Sign In · Marshmallow</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍦</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MARSHMALLOW — AUTH PORTAL v4
+   Login · Registration · Forgot Password · User Management
+   ============================================================ */
+:root{
+  --orange:#FF982F; --orange-2:#FFAB45; --orange-3:#FFC97A;
+  --brown:#93602F; --brown-2:#B98055; --dark:#49301F;
+  --cream:#FFF4E5; --cream-2:#FFF9F1; --bg:#FFFBF5;
+  --pink:#F25F8B; --violet:#7C6CD9; --teal:#0FA8A0;
+  --green:#2FA84F; --green-soft:#E7F7EC;
+  --red:#E5484D; --red-soft:#FDECEC;
+  --amber:#E8A317; --amber-soft:#FFF6E0;
+  --muted:#8C7862; --line:#F0E4D2;
+  --shadow-lg:0 24px 64px rgba(73,48,31,.20),0 2px 8px rgba(73,48,31,.06);
+  --shadow-orange:0 8px 24px rgba(255,152,47,.28);
+  --r-sm:12px; --r-xl:28px;
+  --f-body:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  --f-display:'Fraunces',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:var(--f-body);background:var(--bg);color:var(--dark);
+  font-size:15px;line-height:1.55;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01";
+}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+
+/* ---------- BACKGROUND ---------- */
+#authScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px 20px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(255,171,69,.35) 0%,transparent 45%),
+    radial-gradient(circle at 85% 15%,rgba(242,95,139,.22) 0%,transparent 50%),
+    radial-gradient(circle at 80% 85%,rgba(15,168,160,.20) 0%,transparent 45%),
+    linear-gradient(135deg,#FFF4E5 0%,#FFE5CC 45%,#F5D9B8 100%);
+}
+#authScreen .float-emoji{position:absolute;font-size:60px;opacity:.15;pointer-events:none;animation:floaty 8s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-20px) rotate(8deg)}}
+
+/* ---------- LOGIN CARD ---------- */
+.auth-box{
+  background:rgba(255,255,255,.92);backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid rgba(255,255,255,.9);border-radius:var(--r-xl);
+  padding:40px 32px;width:100%;max-width:420px;
+  box-shadow:var(--shadow-lg);position:relative;z-index:2;
+  animation:authIn .6s cubic-bezier(.4,0,.2,1);
+}
+@keyframes authIn{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+.auth-logo{text-align:center;margin-bottom:32px}
+.auth-logo .logo-ring{
+  width:78px;height:78px;margin:0 auto 14px;
+  background:linear-gradient(135deg,var(--orange),var(--pink),var(--violet));
+  border-radius:24px;display:flex;align-items:center;justify-content:center;
+  font-size:42px;box-shadow:0 12px 32px rgba(255,152,47,.35);
+  transform:rotate(-6deg);transition:.4s;
+}
+.auth-logo .logo-ring:hover{transform:rotate(0) scale(1.05)}
+.auth-logo h1{font-family:var(--f-display);font-size:26px;color:var(--dark);font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.auth-logo p{font-size:11.5px;color:var(--muted);margin-top:6px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700}
+.auth-intro{text-align:center;font-size:13px;color:var(--brown);margin-bottom:22px;font-weight:600;line-height:1.5}
+
+/* ---------- FORM CONTROLS ---------- */
+.input{
+  width:100%;padding:12px 15px;border:1.5px solid var(--line);
+  border-radius:var(--r-sm);background:#fff;transition:all .2s;min-height:46px;
+  font-weight:500;color:var(--dark);
+}
+.input::placeholder{color:#B9A692}
+.input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,152,47,.14)}
+.input:disabled{background:var(--cream-2);color:var(--muted);cursor:not-allowed}
+label.field{display:block;margin-bottom:14px}
+label.field>span{display:block;font-size:12.5px;font-weight:700;color:var(--brown);margin-bottom:6px;letter-spacing:.2px}
+.pw-wrap{position:relative}
+.pw-wrap .input{padding-right:46px}
+.pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);padding:8px;font-size:16px;opacity:.55;border-radius:8px}
+.pw-toggle:hover{opacity:1;background:var(--cream-2)}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 20px;border-radius:var(--r-sm);font-weight:700;font-size:14px;
+  transition:all .2s cubic-bezier(.4,0,.2,1);min-height:46px;white-space:nowrap;
+  letter-spacing:.1px;position:relative;overflow:hidden;
+}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.65;cursor:not-allowed;transform:none!important}
+.btn-primary{
+  background:linear-gradient(135deg,var(--orange) 0%,var(--orange-2) 55%,var(--orange-3) 100%);
+  color:#fff;box-shadow:var(--shadow-orange);
+}
+.btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(255,152,47,.42)}
+.btn-block{width:100%}
+.btn-sm{padding:8px 14px;min-height:36px;font-size:12.5px;border-radius:10px}
+.btn-ghost{background:var(--cream-2);color:var(--brown);border:1.5px solid var(--line)}
+.btn-ghost:hover{background:var(--cream);border-color:var(--orange-3)}
+.btn-danger{background:var(--red-soft);color:var(--red);border:1.5px solid rgba(229,72,77,.2)}
+.btn-danger:hover{background:rgba(229,72,77,.12)}
+
+/* ---------- MESSAGES ---------- */
+.auth-msg{
+  margin-top:14px;padding:11px 15px;border-radius:var(--r-sm);
+  font-size:13px;display:none;font-weight:600;line-height:1.5;
+}
+.auth-msg.err{background:var(--red-soft);color:var(--red);display:block;border-left:3px solid var(--red)}
+.auth-msg.ok{background:var(--green-soft);color:var(--green);display:block;border-left:3px solid var(--green)}
+.auth-msg.warn{background:var(--amber-soft);color:#8A6408;display:block;border-left:3px solid var(--amber)}
+.auth-msg a{color:var(--orange);font-weight:800;text-decoration:underline;cursor:pointer}
+.auth-help{text-align:center;margin-top:18px;font-size:12px;color:var(--muted);line-height:1.5}
+.auth-help b{color:var(--brown)}
+
+/* ---------- MODALS ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(73,48,31,.55);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:1500;display:none;align-items:center;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+.modal-overlay.show{display:flex}
+.modal-card{
+  background:#fff;border-radius:24px;padding:32px 28px;
+  width:100%;max-width:460px;box-shadow:var(--shadow-lg);
+  position:relative;animation:authIn .35s cubic-bezier(.4,0,.2,1);
+  max-height:90vh;overflow-y:auto;
+}
+.modal-card.wide{max-width:780px}
+.modal-close{
+  position:absolute;top:14px;right:16px;
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--muted);background:var(--cream-2);
+}
+.modal-close:hover{background:var(--cream);color:var(--dark)}
+.modal-card h2{font-family:var(--f-display);font-size:22px;margin-bottom:4px;color:var(--dark)}
+.modal-card .modal-sub{font-size:12.5px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+
+/* ---------- ROLE SELECTOR ---------- */
+.role-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.role-card{
+  border:1.5px solid var(--line);border-radius:var(--r-sm);
+  padding:14px 12px;text-align:center;cursor:pointer;
+  transition:all .2s;background:#fff;
+}
+.role-card:hover{border-color:var(--orange-3);background:var(--cream-2)}
+.role-card.selected{border-color:var(--orange);background:var(--cream);box-shadow:0 0 0 3px rgba(255,152,47,.15)}
+.role-card .role-emoji{font-size:24px;display:block;margin-bottom:6px}
+.role-card .role-name{font-weight:700;font-size:13px;color:var(--dark)}
+.role-card .role-desc{font-size:10.5px;color:var(--muted);margin-top:2px}
+.role-card.selected .role-name{color:var(--orange)}
+
+/* ---------- MISC ---------- */
+.auth-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
+.auth-switch a{color:var(--orange);font-weight:700;text-decoration:none;cursor:pointer}
+.auth-switch a:hover{text-decoration:underline}
+.forgot-link{display:block;text-align:right;font-size:12px;color:var(--brown);font-weight:600;margin-top:-8px;margin-bottom:12px;cursor:pointer}
+.forgot-link:hover{color:var(--orange)}
+.code-input{letter-spacing:8px;text-align:center;font-size:20px;font-weight:800}
+.inline-link{color:var(--orange);font-weight:800;text-decoration:underline;cursor:pointer}
+.inline-link:hover{color:var(--orange-2)}
+
+/* ---------- USER MANAGEMENT ---------- */
+#userMgmtModal .modal-card{padding:32px 28px 24px}
+#userMgmtModal .tabs{display:flex;gap:6px;border-bottom:1.5px solid var(--line);margin-bottom:20px;overflow-x:auto}
+#userMgmtModal .tab{
+  padding:10px 14px;font-size:13px;font-weight:700;color:var(--muted);
+  border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap;
+  transition:all .2s;
+}
+#userMgmtModal .tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+#userMgmtModal .tab:hover:not(.active){color:var(--brown)}
+
+.users-toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.users-toolbar .input{flex:1;min-width:180px;min-height:40px;padding:9px 13px;font-size:13.5px}
+
+.user-list{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;padding-right:4px}
+.user-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r-sm);
+  background:#fff;transition:all .15s;
+}
+.user-row:hover{border-color:var(--orange-3);background:var(--cream-2)}
+.user-row .avatar{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--orange),var(--pink));
+  color:#fff;font-weight:800;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  text-transform:uppercase;
+}
+.user-row .user-info{flex:1;min-width:0}
+.user-row .user-name{font-weight:700;font-size:14px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-row .user-email{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-row .user-badges{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.badge{
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;
+  padding:4px 8px;border-radius:6px;
+}
+.badge.role-admin{background:rgba(124,108,217,.15);color:var(--violet)}
+.badge.role-staff{background:rgba(15,168,160,.15);color:var(--teal)}
+.badge.status-active{background:var(--green-soft);color:var(--green)}
+.badge.status-inactive{background:var(--red-soft);color:var(--red)}
+.badge.you{background:rgba(255,152,47,.15);color:var(--orange)}
+
+.user-empty{
+  text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;
+  background:var(--cream-2);border-radius:var(--r-sm);border:1.5px dashed var(--line);
+}
+
+/* Edit form inside management modal */
+.edit-form{display:none;flex-direction:column;gap:0;padding-top:4px}
+.edit-form.show{display:flex}
+.edit-form .field{margin-bottom:14px}
+.edit-form .edit-actions{display:flex;gap:10px;margin-top:8px}
+.edit-form .edit-actions .btn{flex:1}
+
+.section-heading{
+  font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--muted);margin:24px 0 12px;
+}
+.section-heading:first-child{margin-top:0}
+
+/* ---------- LOADING ---------- */
+#globalLoading{
+  position:fixed;inset:0;background:rgba(255,251,245,.75);
+  backdrop-filter:blur(4px);z-index:3000;display:none;
+  align-items:center;justify-content:center;
+}
+#globalLoading.show{display:flex}
+.loader{background:#fff;padding:24px 32px;border-radius:16px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--muted);font-weight:600;font-size:13px}
+.spinner{width:24px;height:24px;border:3px solid var(--line);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- TOAST ---------- */
+#toastWrap{position:fixed;top:16px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:10px;max-width:360px}
+.toast{
+  background:#fff;border-radius:var(--r-sm);padding:14px 16px;
+  box-shadow:var(--shadow-lg);font-size:13.5px;font-weight:600;
+  display:flex;gap:11px;align-items:flex-start;
+  animation:toastIn .3s cubic-bezier(.4,0,.2,1);border-left:4px solid var(--orange);
+}
+.toast.ok{border-left-color:var(--green)}
+.toast.err{border-left-color:var(--red)}
+.toast.warn{border-left-color:var(--amber)}
+@keyframes toastIn{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:600px){
+  .user-row{flex-wrap:wrap}
+  .user-row .user-badges{width:100%;justify-content:flex-start}
+}
+@media(max-width:480px){
+  .auth-box{padding:32px 22px}
+  .modal-card{padding:26px 20px}
+  .role-cards{gap:8px}
+  .role-card{padding:12px 8px}
+}
+</style>
+</head>
+<body>
+
+<div id="authScreen">
+  <span class="float-emoji" style="top:12%;left:8%;animation-delay:0s">🍦</span>
+  <span class="float-emoji" style="top:65%;left:5%;animation-delay:1.5s;font-size:48px">🧁</span>
+  <span class="float-emoji" style="top:18%;right:8%;animation-delay:2.5s;font-size:52px">🍰</span>
+  <span class="float-emoji" style="bottom:12%;right:12%;animation-delay:.8s">🍨</span>
+  <span class="float-emoji" style="bottom:20%;left:15%;animation-delay:3s;font-size:44px">🍫</span>
+
+  <!-- ================= LOGIN CARD ================= -->
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="logo-ring">🍦</div>
+      <h1>Marshmallow</h1>
+      <p>Ice Creams & Cakes</p>
+    </div>
+    <div class="auth-intro">
+      Internal Management Portal<br>
+      <span style="color:var(--muted);font-size:11.5px">Sign in with your business credentials</span>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <label class="field"><span>Email Address</span>
+        <input id="loginEmail" type="email" class="input" required autocomplete="username" placeholder="you@business.com">
+      </label>
+      <label class="field"><span>Password</span>
+        <div class="pw-wrap">
+          <input id="loginPass" type="password" class="input" required autocomplete="current-password" placeholder="••••••••">
+          <button type="button" class="pw-toggle" onclick="togglePw('loginPass')" aria-label="Show password">👁️</button>
+        </div>
+      </label>
+      <span class="forgot-link" onclick="openForgotModal()">Forgot password?</span>
+      <button id="loginBtn" class="btn btn-primary btn-block" style="font-size:15px" type="submit">
+        Sign In →
+      </button>
+      <div id="loginMsg" class="auth-msg"></div>
+    </form>
+
+    <div class="auth-switch">
+      New here? <a onclick="openRegisterModal()">Create a login</a>
+    </div>
+    <div class="auth-help">
+      Access is <b>invitation-only</b>. A 6-digit authorization code is required to register.
+    </div>
+  </div>
+</div>
+
+<!-- ================= REGISTRATION MODAL ================= -->
+<div id="registerModal" class="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeRegisterModal()" aria-label="Close">✕</button>
+    <h2>Create Account</h2>
+    <p class="modal-sub">Enter your details and the 6-digit authorization code provided by the owner.</p>
+
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <label class="field"><span>Full Name / Username</span>
+        <input id="regName" type="text" class="input" required minlength="2" maxlength="50" placeholder="John Doe" autocomplete="name">
+      </label>
+      <label class="field"><span>Email Address</span>
+        <input id="regEmail" type="email" class="input" required placeholder="you@business.com" autocomplete="email">
+      </label>
+      <label class="field"><span>Password</span>
+        <div class="pw-wrap">
+          <input id="regPass" type="password" class="input" required minlength="6" placeholder="At least 6 characters" autocomplete="new-password">
+          <button type="button" class="pw-toggle" onclick="togglePw('regPass')">👁️</button>
+        </div>
+      </label>
+      <label class="field"><span>Confirm Password</span>
+        <div class="pw-wrap">
+          <input id="regPass2" type="password" class="input" required minlength="6" placeholder="Repeat password" autocomplete="new-password">
+          <button type="button" class="pw-toggle" onclick="togglePw('regPass2')">👁️</button>
+        </div>
+      </label>
+
+      <div class="field"><span>Account Type</span>
+        <div class="role-cards">
+          <div class="role-card" data-role="staff" onclick="selectRole('staff')">
+            <span class="role-emoji">👤</span>
+            <div class="role-name">Staff</div>
+            <div class="role-desc">Limited access</div>
+          </div>
+          <div class="role-card" data-role="admin" onclick="selectRole('admin')">
+            <span class="role-emoji">🛡️</span>
+            <div class="role-name">Admin</div>
+            <div class="role-desc">Full access</div>
+          </div>
+        </div>
+        <input type="hidden" id="regRole" value="">
+      </div>
+
+      <label class="field"><span>6-Digit Authorization Code</span>
+        <input id="regCode" type="password" class="input code-input" required inputmode="numeric" maxlength="6" pattern="[0-9]{6}" placeholder="••••••" autocomplete="one-time-code">
+      </label>
+
+      <button id="regSubmitBtn" class="btn btn-primary btn-block" style="margin-top:8px" type="submit">
+        Create Account →
+      </button>
+      <div id="regMsg" class="auth-msg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= FORGOT PASSWORD MODAL ================= -->
+<div id="forgotModal" class="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeForgotModal()" aria-label="Close">✕</button>
+    <h2>Reset Password</h2>
+    <p class="modal-sub">Enter your registered email address. Firebase will send a password reset link.</p>
+    <form id="forgotForm" onsubmit="handleForgotPassword(event)">
+      <label class="field"><span>Email Address</span>
+        <input id="forgotEmail" type="email" class="input" required placeholder="you@business.com" autocomplete="email">
+      </label>
+      <button id="forgotBtn" class="btn btn-primary btn-block" type="submit">Send Reset Email →</button>
+      <div id="forgotMsg" class="auth-msg"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= USER MANAGEMENT MODAL ================= -->
+<div id="userMgmtModal" class="modal-overlay">
+  <div class="modal-card wide">
+    <button class="modal-close" onclick="closeUserMgmt()" aria-label="Close">✕</button>
+    <h2>User Management</h2>
+    <p class="modal-sub" id="umSubtitle">Manage your own account details.</p>
+
+    <div class="tabs" id="umTabs">
+      <button class="tab active" data-tab="self" onclick="switchUmTab('self')">My Account</button>
+      <button class="tab" data-tab="list" onclick="switchUmTab('list')" id="umListTab" style="display:none">All Users</button>
+    </div>
+
+    <!-- SELF TAB -->
+    <div id="umSelfTab">
+      <div class="section-heading">Your Profile</div>
+      <div class="user-row" id="umSelfRow"></div>
+
+      <div class="section-heading">Change Username</div>
+      <form class="edit-form show" id="umUsernameForm" onsubmit="handleUsernameUpdate(event)">
+        <label class="field"><span>New Username</span>
+          <input id="umNewUsername" type="text" class="input" required minlength="2" maxlength="50" placeholder="Enter new username">
+        </label>
+        <button id="umUsernameBtn" class="btn btn-primary btn-block" type="submit">Save Username →</button>
+        <div id="umUsernameMsg" class="auth-msg"></div>
+      </form>
+
+      <div class="section-heading">Change Password</div>
+      <form class="edit-form show" id="umPasswordForm" onsubmit="handlePasswordUpdate(event)">
+        <label class="field"><span>Current Password</span>
+          <div class="pw-wrap">
+            <input id="umCurrentPass" type="password" class="input" required autocomplete="current-password" placeholder="Enter current password">
+            <button type="button" class="pw-toggle" onclick="togglePw('umCurrentPass')">👁️</button>
+          </div>
+        </label>
+        <label class="field"><span>New Password</span>
+          <div class="pw-wrap">
+            <input id="umNewPass" type="password" class="input" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters">
+            <button type="button" class="pw-toggle" onclick="togglePw('umNewPass')">👁️</button>
+          </div>
+        </label>
+        <label class="field"><span>Confirm New Password</span>
+          <div class="pw-wrap">
+            <input id="umNewPass2" type="password" class="input" required minlength="6" autocomplete="new-password" placeholder="Repeat new password">
+            <button type="button" class="pw-toggle" onclick="togglePw('umNewPass2')">👁️</button>
+          </div>
+        </label>
+        <button id="umPasswordBtn" class="btn btn-primary btn-block" type="submit">Update Password →</button>
+        <div id="umPasswordMsg" class="auth-msg"></div>
+      </form>
+    </div>
+
+    <!-- LIST TAB (admin only) -->
+    <div id="umListTabPanel" style="display:none">
+      <div class="users-toolbar">
+        <input id="umSearch" type="search" class="input" placeholder="🔍 Search by username or email…" oninput="renderUserList()">
+        <button class="btn btn-ghost btn-sm" onclick="loadAllUsers()">↻ Refresh</button>
+      </div>
+      <div id="umUserList" class="user-list">
+        <div class="user-empty">Loading users…</div>
+      </div>
+    </div>
+
+    <!-- INLINE EDIT (admin editing another user) -->
+    <div id="umEditPanel" style="display:none">
+      <div class="section-heading">Editing: <span id="umEditName" style="color:var(--orange)"></span></div>
+      <form class="edit-form show" id="umAdminEditForm" onsubmit="handleAdminUserUpdate(event)">
+        <label class="field"><span>Username</span>
+          <input id="umAdminNewUsername" type="text" class="input" required minlength="2" maxlength="50">
+        </label>
+        <label class="field"><span>New Password <span style="color:var(--muted);font-weight:500;text-transform:none">(leave blank to keep current)</span></span>
+          <div class="pw-wrap">
+            <input id="umAdminNewPass" type="password" class="input" minlength="6" autocomplete="new-password" placeholder="Optional — at least 6 characters">
+            <button type="button" class="pw-toggle" onclick="togglePw('umAdminNewPass')">👁️</button>
+          </div>
+        </label>
+        <div class="edit-actions">
+          <button type="button" class="btn btn-ghost" onclick="cancelAdminEdit()">Cancel</button>
+          <button id="umAdminEditBtn" class="btn btn-primary" type="submit">Save Changes →</button>
+        </div>
+        <div id="umAdminEditMsg" class="auth-msg"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="toastWrap"></div>
+<div id="globalLoading"><div class="loader"><div class="spinner"></div><span id="loadingText">Working…</span></div></div>
+
+<script type="module">
+/* ============================================================
+   MARSHMALLOW AUTH — CLIENT-SIDE LOGIC (v4)
+   Sections:
+     1. Firebase initialisation
+     2. Authorization codes (client-side gate — see note)
+     3. Utilities
+     4. Modal controls
+     5. Login
+     6. Auth state → profile lookup → redirect
+     7. Registration (duplicate-email → sign-in toggle)
+     8. Forgot password
+     9. User management (username + password edits)
+   ============================================================ */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import {
+  getDatabase, ref, get, set, update, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+/* ---------- 1. FIREBASE INITIALISATION ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyA9lcaEUztt8j1q44P0FrC3PKQ58sseV9o",
+  authDomain: "softy-ice-cream-shop.firebaseapp.com",
+  databaseURL: "https://softy-ice-cream-shop-default-rtdb.firebaseio.com",
+  projectId: "softy-ice-cream-shop",
+  storageBucket: "softy-ice-cream-shop.firebasestorage.app",
+  messagingSenderId: "1075750027667",
+  appId: "1:1075750027667:web:85eb50c080e1704b18a866"
+};
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getDatabase(app);
+
+/* ---------- 2. AUTHORIZATION CODES ----------
+   These live in page source and act as a soft gate only.
+   Real protection comes from Realtime DB Security Rules. */
+const STAFF_AUTH_CODE = "149673";
+const ADMIN_AUTH_CODE = "578129";
+
+/* ---------- 3. UTILITIES ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg, type = 'ok') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<span style="font-size:16px;flex-shrink:0">${type==='ok'?'✅':type==='err'?'⚠️':'ℹ️'}</span><span>${esc(msg)}</span>`;
+  $('#toastWrap').appendChild(el);
+  setTimeout(() => {
+    el.style.transition = '.3s'; el.style.opacity = '0'; el.style.transform = 'translateX(40px)';
+    setTimeout(() => el.remove(), 300);
+  }, 4200);
+}
+
+function showLoading(show, text = 'Working…') {
+  $('#loadingText').textContent = text;
+  $('#globalLoading').classList.toggle('show', show);
+}
+
+window.togglePw = (id) => {
+  const inp = document.getElementById(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+};
+
+function setMsg(sel, html, kind) {
+  const el = $(sel);
+  el.innerHTML = html;                 // callers pass pre-escaped / trusted HTML
+  el.className = 'auth-msg ' + kind;
+  el.style.display = 'block';
+}
+function clearMsg(sel) {
+  const el = $(sel);
+  el.innerHTML = '';
+  el.className = 'auth-msg';
+  el.style.display = 'none';
+}
+
+/* State shared across modals */
+let currentUser   = null;   // Firebase auth user
+let currentProfile= null;   // { username, email, role, status, createdAt }
+let allUsersCache = [];     // admin: list of { uid, ...profile }
+
+/* ---------- 4. MODAL CONTROLS ---------- */
+window.openRegisterModal = () => { $('#registerModal').classList.add('show'); $('#regName').focus(); };
+window.closeRegisterModal = () => { $('#registerModal').classList.remove('show'); };
+window.openForgotModal   = () => { $('#forgotModal').classList.add('show'); $('#forgotEmail').focus(); };
+window.closeForgotModal  = () => { $('#forgotModal').classList.remove('show'); };
+
+window.selectRole = (role) => {
+  $$('.role-card').forEach(c => c.classList.toggle('selected', c.dataset.role === role));
+  $('#regRole').value = role;
+};
+
+/* Close modals on backdrop click or Esc */
+$$('.modal-overlay').forEach(o => {
+  o.addEventListener('click', (e) => { if (e.target === o) o.classList.remove('show'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') $$('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+});
+
+/* ---------- 5. LOGIN ---------- */
+window.handleLogin = async (e) => {
+  e.preventDefault();
+  clearMsg('#loginMsg');
+
+  const email = $('#loginEmail').value.trim();
+  const password = $('#loginPass').value;
+  const btn = $('#loginBtn');
+
+  btn.disabled = true;
+  showLoading(true, 'Signing in…');
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    // onAuthStateChanged handles the rest.
+  } catch (err) {
+    setMsg('#loginMsg', esc(friendlyAuthError(err)), 'err');
+    btn.disabled = false;
+    showLoading(false);
+  }
+};
+
+function friendlyAuthError(err) {
+  const c = err.code || '';
+  if (c.includes('invalid-email')) return 'Please enter a valid email address.';
+  if (c.includes('user-not-found') || c.includes('wrong-password') || c.includes('invalid-credential'))
+    return 'Incorrect email or password. Please try again.';
+  if (c.includes('too-many-requests')) return 'Too many attempts. Please wait and try again.';
+  if (c.includes('network')) return 'Network error. Check your connection.';
+  if (c.includes('user-disabled')) return 'This account has been disabled. Contact the administrator.';
+  return err.message || 'Sign-in failed. Please try again.';
+}
+
+/* ---------- 6. AUTH STATE — PROFILE + SELF VIEW ----------
+   Instead of redirecting immediately, we now:
+     - Load the profile
+     - Store it in memory
+     - Show a "dashboard" area on the same page? No — this
+       file still redirects to main.html on real login.
+     - On page load with an existing session, we show the
+       user-management panel so the user can edit their own
+       account without needing main.html.
+   ------------------------------------------------------ */
+
+/* Show the user management panel for the signed-in user */
+function showUserMgmtForSelf() {
+  if (!currentUser || !currentProfile) return;
+
+  /* Cache for other pages */
+  sessionStorage.setItem('mm_uid',      currentUser.uid);
+  sessionStorage.setItem('mm_username', currentProfile.username || '');
+  sessionStorage.setItem('mm_role',     currentProfile.role);
+
+  /* Build self row */
+  $('#umSelfRow').innerHTML = renderUserRowHTML(currentUser.uid, currentProfile, true);
+  $('#umNewUsername').value = currentProfile.username || '';
+  $('#umNewUsername').placeholder = currentProfile.username || 'Enter new username';
+
+  /* Admin tab visibility */
+  const isAdmin = currentProfile.role === 'admin';
+  $('#umListTab').style.display = isAdmin ? '' : 'none';
+  $('#umSubtitle').textContent = isAdmin
+    ? 'Edit your own account, or manage other users.'
+    : 'Manage your own account details.';
+
+  /* Reset to self tab */
+  switchUmTab('self');
+
+  /* Show modal */
+  $('#userMgmtModal').classList.add('show');
+}
+
+/* Called from the login card "Manage account" button */
+window.openUserMgmt = () => {
+  if (!currentUser) {
+    toast('Please sign in first.', 'warn');
+    return;
+  }
+  showUserMgmtForSelf();
+};
+window.closeUserMgmt = () => $('#userMgmtModal').classList.remove('show');
+
+window.switchUmTab = (tab) => {
+  $$('#umTabs .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  const isSelf = tab === 'self';
+  $('#umSelfTab').style.display   = isSelf ? '' : 'none';
+  $('#umListTabPanel').style.display = isSelf ? 'none' : '';
+  $('#umEditPanel').style.display = 'none';
+  if (!isSelf) loadAllUsers();
+};
+
+/* ---------- 6a. AUTH STATE (real redirect preserved) ----------
+   We keep the original behaviour: successful login redirects
+   to main.html. But we ALSO show the user-management panel
+   on this page so users can edit account without main.html.
+
+   Note: because we redirect on login, the panel is really
+   intended for use when the page is opened directly while
+   already authenticated (e.g. from a "Manage Account" link
+   in main.html pointing back to login.html?manage=1).
+   ---------------------------------------------------------- */
+
+function getParams() { return new URLSearchParams(location.search); }
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    currentUser = null;
+    currentProfile = null;
+    showLoading(false);
+    return;
+  }
+
+  showLoading(true, 'Loading your profile…');
+
+  try {
+    const snap = await get(ref(db, 'users/' + user.uid));
+    if (!snap.exists()) {
+      throw new Error('No profile found for this account. Contact the administrator.');
+    }
+    const profile = snap.val();
+
+    if (profile.status && profile.status !== 'active') {
+      throw new Error('Your account has been deactivated. Contact the administrator.');
+    }
+    if (profile.role !== 'admin' && profile.role !== 'staff') {
+      throw new Error('Your account has no valid role assigned.');
+    }
+
+    currentUser = user;
+    currentProfile = profile;
+
+    /* If ?manage=1 → open management panel and stay here */
+    if (getParams().get('manage') === '1') {
+      showLoading(false);
+      showUserMgmtForSelf();
+      return;
+    }
+
+    /* Otherwise → normal redirect to dashboard */
+    const dashboard = profile.role === 'admin' ? 'main.html' : 'main.html';
+    window.location.replace(dashboard);
+
+  } catch (err) {
+    console.error('[auth]', err);
+    setMsg('#loginMsg', esc(err.message || 'Failed to load profile.'), 'err');
+    $('#loginBtn').disabled = false;
+    try { await signOut(auth); } catch (_) {}
+    showLoading(false);
+  }
+});
+
+/* ---------- 7. REGISTRATION ---------- */
+window.handleRegister = async (e) => {
+  e.preventDefault();
+  clearMsg('#regMsg');
+
+  const username  = $('#regName').value.trim();
+  const email     = $('#regEmail').value.trim().toLowerCase();
+  const password  = $('#regPass').value;
+  const password2 = $('#regPass2').value;
+  const role      = $('#regRole').value;
+  const code      = $('#regCode').value.trim();
+
+  if (username.length < 2)                return setMsg('#regMsg', 'Please enter your full name.', 'err');
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+                                          return setMsg('#regMsg', 'Please enter a valid email address.', 'err');
+  if (password.length < 6)                return setMsg('#regMsg', 'Password must be at least 6 characters.', 'err');
+  if (password !== password2)             return setMsg('#regMsg', 'Passwords do not match.', 'err');
+  if (!role)                              return setMsg('#regMsg', 'Please select an account type.', 'err');
+  if (!/^\d{6}$/.test(code))              return setMsg('#regMsg', 'Authorization code must be exactly 6 digits.', 'err');
+
+  const expected = role === 'admin' ? ADMIN_AUTH_CODE : STAFF_AUTH_CODE;
+  if (code !== expected) {
+    return setMsg('#regMsg', `Invalid ${role} authorization code. Please check and try again.`, 'err');
+  }
+
+  const btn = $('#regSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Creating account…';
+  showLoading(true, 'Creating your account…');
+
+  let cred;
+  try {
+    cred = await createUserWithEmailAndPassword(auth, email, password);
+    try { await updateProfile(cred.user, { displayName: username }); } catch (_) {}
+
+    await set(ref(db, 'users/' + cred.user.uid), {
+      username,
+      email,
+      role,
+      status:    'active',
+      createdAt: serverTimestamp()
+    });
+
+    toast('Account created successfully! Please sign in.', 'ok');
+    setMsg('#regMsg', 'Account created successfully. You can now sign in.', 'ok');
+
+    try { await signOut(auth); } catch (_) {}
+
+    $('#registerForm').reset();
+    $('#regRole').value = '';
+    $$('.role-card').forEach(c => c.classList.remove('selected'));
+    $('#loginEmail').value = email;
+
+    setTimeout(() => {
+      closeRegisterModal();
+      clearMsg('#regMsg');
+      $('#loginPass').focus();
+    }, 1400);
+
+  } catch (err) {
+    console.error('[register]', err);
+
+    /* Rollback orphaned auth user (non-auth errors) */
+    if (cred?.user && err?.code && !err.code.startsWith('auth/')) {
+      try { await cred.user.delete(); } catch (_) {}
+    }
+
+    /* ---- DUPLICATE EMAIL: show a toggle link to sign in instead ---- */
+    if (err.code === 'auth/email-already-in-use') {
+      $('#loginEmail').value = email;
+      const msg = $('#regMsg');
+      msg.className = 'auth-msg warn';
+      msg.style.display = 'block';
+      msg.innerHTML = `An account with <b>${esc(email)}</b> already exists.
+        <br><a href="#" id="gotoLoginFromReg">Sign in instead →</a>`;
+      document.getElementById('gotoLoginFromReg').addEventListener('click', (ev) => {
+        ev.preventDefault();
+        closeRegisterModal();
+        clearMsg('#regMsg');
+        $('#loginEmail').value = email;
+        $('#loginPass').focus();
+        toast('Enter your password to sign in.', 'ok');
+      });
+    } else {
+      setMsg('#regMsg', esc(friendlyRegisterError(err)), 'err');
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Create Account →';
+    showLoading(false);
+  }
+};
+
+function friendlyRegisterError(err) {
+  const c = err.code || '';
+  if (c === 'auth/invalid-email')        return 'Please enter a valid email address.';
+  if (c === 'auth/weak-password')        return 'Password is too weak. Use at least 6 characters.';
+  if (c === 'auth/operation-not-allowed')return 'Email/Password sign-in is disabled. Contact the administrator.';
+  if (c === 'auth/network-request-failed') return 'Network error. Check your connection.';
+  if (c.includes('permission_denied'))   return 'Account created but profile could not be saved. Contact the administrator.';
+  return err.message || 'Registration failed. Please try again.';
+}
+
+/* ---------- 8. FORGOT PASSWORD ---------- */
+window.handleForgotPassword = async (e) => {
+  e.preventDefault();
+  clearMsg('#forgotMsg');
+
+  const email = $('#forgotEmail').value.trim();
+  const btn = $('#forgotBtn');
+
+  if (!email) return setMsg('#forgotMsg', 'Please enter your email address.', 'err');
+
+  btn.disabled = true;
+  showLoading(true, 'Sending reset email…');
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    setMsg('#forgotMsg', 'Password reset email sent. Check your inbox (and spam folder).', 'ok');
+    toast('Reset email sent.', 'ok');
+    $('#forgotForm').reset();
+    setTimeout(() => { closeForgotModal(); clearMsg('#forgotMsg'); }, 2600);
+  } catch (err) {
+    setMsg('#forgotMsg', esc(friendlyAuthError(err)), 'err');
+  } finally {
+    btn.disabled = false;
+    showLoading(false);
+  }
+};
+
+/* ============================================================
+   9. USER MANAGEMENT
+   ============================================================ */
+
+/* Render one user row. */
+function renderUserRowHTML(uid, profile, isSelf) {
+  const initial = (profile.username || profile.email || '?').charAt(0).toUpperCase();
+  const roleClass = profile.role === 'admin' ? 'role-admin' : 'role-staff';
+  const statusClass = profile.status === 'active' ? 'status-active' : 'status-inactive';
+  const youBadge = isSelf ? `<span class="badge you">You</span>` : '';
+  const editBtn = isSelf
+    ? ''
+    : `<button class="btn btn-ghost btn-sm" onclick="startAdminEdit('${esc(uid)}')">Edit</button>`;
+
+  return `
+    <div class="avatar">${esc(initial)}</div>
+    <div class="user-info">
+      <div class="user-name">${esc(profile.username || '(no username)')}</div>
+      <div class="user-email">${esc(profile.email || '')}</div>
+    </div>
+    <div class="user-badges">
+      ${youBadge}
+      <span class="badge ${roleClass}">${esc(profile.role)}</span>
+      <span class="badge ${statusClass}">${esc(profile.status || 'active')}</span>
+      ${editBtn}
+    </div>
+  `;
+}
+
+/* ---- Self: change username ---- */
+window.handleUsernameUpdate = async (e) => {
+  e.preventDefault();
+  clearMsg('#umUsernameMsg');
+  if (!currentUser) return;
+
+  const newName = $('#umNewUsername').value.trim();
+  if (newName.length < 2) return setMsg('#umUsernameMsg', 'Username must be at least 2 characters.', 'err');
+  if (newName === currentProfile.username) {
+    return setMsg('#umUsernameMsg', 'That is already your username.', 'warn');
+  }
+
+  const btn = $('#umUsernameBtn');
+  btn.disabled = true;
+  showLoading(true, 'Updating username…');
+
+  try {
+    /* Update Firebase Auth displayName (best-effort) */
+    try { await updateProfile(currentUser, { displayName: newName }); } catch (_) {}
+
+    /* Update Realtime Database — username field is owner-writable */
+    await update(ref(db, 'users/' + currentUser.uid), { username: newName });
+
+    currentProfile.username = newName;
+    sessionStorage.setItem('mm_username', newName);
+
+    /* Refresh self row */
+    $('#umSelfRow').innerHTML = renderUserRowHTML(currentUser.uid, currentProfile, true);
+
+    toast('Username updated.', 'ok');
+    setMsg('#umUsernameMsg', 'Your username has been updated.', 'ok');
+
+  } catch (err) {
+    console.error('[username]', err);
+    const msg = err?.code?.includes('permission_denied')
+      ? 'Permission denied. Your account cannot change the username.'
+      : (err.message || 'Failed to update username.');
+    setMsg('#umUsernameMsg', esc(msg), 'err');
+  } finally {
+    btn.disabled = false;
+    showLoading(false);
+  }
+};
+
+/* ---- Self: change password ---- */
+window.handlePasswordUpdate = async (e) => {
+  e.preventDefault();
+  clearMsg('#umPasswordMsg');
+  if (!currentUser || !currentUser.email) return;
+
+  const currentPass = $('#umCurrentPass').value;
+  const newPass     = $('#umNewPass').value;
+  const newPass2    = $('#umNewPass2').value;
+
+  if (!currentPass)         return setMsg('#umPasswordMsg', 'Enter your current password.', 'err');
+  if (newPass.length < 6)   return setMsg('#umPasswordMsg', 'New password must be at least 6 characters.', 'err');
+  if (newPass !== newPass2) return setMsg('#umPasswordMsg', 'New passwords do not match.', 'err');
+  if (newPass === currentPass) return setMsg('#umPasswordMsg', 'New password must differ from current password.', 'err');
+
+  const btn = $('#umPasswordBtn');
+  btn.disabled = true;
+  showLoading(true, 'Updating password…');
+
+  try {
+    /* Re-authenticate first (required by Firebase for sensitive ops) */
+    const cred = EmailAuthProvider.credential(currentUser.email, currentPass);
+    await reauthenticateWithCredential(currentUser, cred);
+
+    await updatePassword(currentUser, newPass);
+
+    $('#umPasswordForm').reset();
+    toast('Password updated.', 'ok');
+    setMsg('#umPasswordMsg', 'Your password has been updated successfully.', 'ok');
+
+  } catch (err) {
+    console.error('[password]', err);
+    let msg = err.message || 'Failed to update password.';
+    if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential')
+      msg = 'Current password is incorrect.';
+    else if (err.code === 'auth/weak-password')
+      msg = 'New password is too weak. Use at least 6 characters.';
+    else if (err.code === 'auth/requires-recent-login')
+      msg = 'Please sign in again before changing your password.';
+    setMsg('#umPasswordMsg', esc(msg), 'err');
+  } finally {
+    btn.disabled = false;
+    showLoading(false);
+  }
+};
+
+/* ---- Admin: load all users ---- */
+window.loadAllUsers = async () => {
+  if (!currentProfile || currentProfile.role !== 'admin') return;
+  const list = $('#umUserList');
+  list.innerHTML = '<div class="user-empty">Loading users…</div>';
+
+  try {
+    const snap = await get(ref(db, 'users'));
+    const rows = [];
+    if (snap.exists()) {
+      snap.forEach(child => {
+        rows.push({ uid: child.key, ...child.val() });
+      });
+    }
+    rows.sort((a, b) =>
+      (a.username || '').localeCompare(b.username || '')
+    );
+    allUsersCache = rows;
+    renderUserList();
+  } catch (err) {
+    console.error('[loadUsers]', err);
+    list.innerHTML = `<div class="user-empty">Could not load users: ${esc(err.message || 'unknown')}</div>`;
+  }
+};
+
+window.renderUserList = () => {
+  if (!currentProfile || currentProfile.role !== 'admin') return;
+
+  const search = ($('#umSearch')?.value || '').toLowerCase().trim();
+  const filtered = allUsersCache.filter(u => {
+    if (!search) return true;
+    return (u.username || '').toLowerCase().includes(search)
+        || (u.email    || '').toLowerCase().includes(search);
+  });
+
+  const list = $('#umUserList');
+  if (!filtered.length) {
+    list.innerHTML = `<div class="user-empty">${search ? 'No users match your search.' : 'No users yet.'}</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(u => {
+    const isSelf = u.uid === currentUser.uid;
+    return `<div class="user-row" data-uid="${esc(u.uid)}">${renderUserRowHTML(u.uid, u, isSelf)}</div>`;
+  }).join('');
+};
+
+/* ---- Admin: start editing another user ---- */
+let adminEditTarget = null;
+window.startAdminEdit = (uid) => {
+  if (!currentProfile || currentProfile.role !== 'admin') {
+    toast('Only admins can edit other users.', 'err');
+    return;
+  }
+  if (uid === currentUser.uid) {
+    // Fall back to self tab for your own account
+    switchUmTab('self');
+    toast('Use "My Account" tab to edit your own details.', 'warn');
+    return;
+  }
+  const target = allUsersCache.find(u => u.uid === uid);
+  if (!target) return;
+
+  adminEditTarget = target;
+  $('#umEditName').textContent = target.username || target.email || uid;
+  $('#umAdminNewUsername').value = target.username || '';
+  $('#umAdminNewPass').value = '';
+  clearMsg('#umAdminEditMsg');
+
+  $('#umListTabPanel').style.display = 'none';
+  $('#umEditPanel').style.display = '';
+  $('#umAdminNewUsername').focus();
+};
+
+window.cancelAdminEdit = () => {
+  adminEditTarget = null;
+  $('#umEditPanel').style.display = 'none';
+  $('#umListTabPanel').style.display = '';
+};
+
+window.handleAdminUserUpdate = async (e) => {
+  e.preventDefault();
+  clearMsg('#umAdminEditMsg');
+  if (!adminEditTarget) return;
+  if (!currentProfile || currentProfile.role !== 'admin') {
+    return setMsg('#umAdminEditMsg', 'Only admins can edit other users.', 'err');
+  }
+
+  const newName = $('#umAdminNewUsername').value.trim();
+  const newPass = $('#umAdminNewPass').value;
+
+  if (newName.length < 2) return setMsg('#umAdminEditMsg', 'Username must be at least 2 characters.', 'err');
+  if (newPass && newPass.length < 6) return setMsg('#umAdminEditMsg', 'New password must be at least 6 characters.', 'err');
+
+  const btn = $('#umAdminEditBtn');
+  btn.disabled = true;
+  showLoading(true, 'Saving changes…');
+
+  try {
+    /* 1. Update username in Realtime DB (admin can write) */
+    if (newName !== (adminEditTarget.username || '')) {
+      await update(ref(db, 'users/' + adminEditTarget.uid), { username: newName });
+    }
+
+    /* 2. Update password IF provided.
+       Note: from the client SDK we can only change the *currently
+       signed-in* user's password via updatePassword(). To change
+       ANOTHER user's password you must use the Admin SDK on the
+       server (see delivery notes). So we cannot fulfil the
+       password change for other users here — surface that clearly. */
+    if (newPass) {
+      setMsg('#umAdminEditMsg',
+        `Username saved. Password change for another user must be done through the Firebase Console → Authentication → Users (or an Admin-SDK Cloud Function). The client SDK cannot change another user's password.`,
+        'warn');
+    } else {
+      setMsg('#umAdminEditMsg', 'User updated successfully.', 'ok');
+    }
+
+    toast('User updated.', 'ok');
+
+    /* Refresh cache */
+    await loadAllUsers();
+    setTimeout(() => cancelAdminEdit(), newPass ? 4200 : 1200);
+
+  } catch (err) {
+    console.error('[adminEdit]', err);
+    const msg = err?.code?.includes('permission_denied')
+      ? 'Permission denied. Only admins can modify user records.'
+      : (err.message || 'Failed to update user.');
+    setMsg('#umAdminEditMsg', esc(msg), 'err');
+  } finally {
+    btn.disabled = false;
+    showLoading(false);
+  }
+};
+
+/* ---------- 10. LOGOUT (for other pages) ---------- */
+window.marshmallowLogout = async () => {
+  try {
+    await signOut(auth);
+    sessionStorage.removeItem('mm_uid');
+    sessionStorage.removeItem('mm_username');
+    sessionStorage.removeItem('mm_role');
+    window.location.replace('login.html');
+  } catch (err) {
+    console.error('[logout]', err);
+    toast('Logout failed. Try again.', 'err');
+  }
+};
+
+/* ---------- 11. "Manage account" shortcut on the login card ----------
+   Add a small link below the login form when a session exists,
+   so users can reach the management panel without a full reload
+   (e.g. /login.html?manage=1). */
+(function addManageLink() {
+  const help = document.querySelector('.auth-help');
+  if (!help) return;
+  const link = document.createElement('div');
+  link.style.cssText = 'text-align:center;margin-top:10px;font-size:12.5px';
+  link.innerHTML = `<a class="inline-link" id="manageAccountLink" style="display:none">Manage my account</a>`;
+  help.after(link);
+
+  document.getElementById('manageAccountLink').addEventListener('click', () => {
+    if (!currentUser) { toast('Please sign in first.', 'warn'); return; }
+    showUserMgmtForSelf();
+  });
+
+  /* Show when signed in */
+  onAuthStateChanged(auth, (u) => {
+    document.getElementById('manageAccountLink').style.display = u ? '' : 'none';
+  });
+})();
+</script>
+</body>
+</html>
