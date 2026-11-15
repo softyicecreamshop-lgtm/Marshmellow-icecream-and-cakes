@@ -453,7 +453,7 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
     <div class="emoji">🔒</div>
     <h2>Please sign in</h2>
     <p>You must be signed in to access the management portal.</p>
-    <button class="btn btn-primary btn-block" onclick="window.location.replace('login.html')">Go to Login →</button>
+    <button class="btn btn-primary btn-block" onclick="window.location.replace('index.html')">Go to Login →</button>
   </div>
 </div>
 
@@ -801,16 +801,16 @@ window.openProfileMenu = ()=>{
     `<button class="btn btn-ghost" onclick="closeModal()">Close</button>
      <button class="btn btn-danger" onclick="handleLogout()">Sign Out</button>`);
 };
-window.handleLogout = async ()=>{ closeModal(); detachListeners(); try{ await signOut(auth); }catch(e){} window.location.replace('login.html'); };
+window.handleLogout = async ()=>{ closeModal(); detachListeners(); try{ await signOut(auth); }catch(e){} window.location.replace('index.html'); };
 
 onAuthStateChanged(auth, async (user)=>{
   if(user){
     showLoading(true);
     try{
       const snap = await get(ref(db,'users/'+user.uid));
-      if(!snap.exists()){ toast('No profile found','err'); await signOut(auth); window.location.replace('login.html'); return; }
+      if(!snap.exists()){ toast('No profile found','err'); await signOut(auth); window.location.replace('index.html'); return; }
       const profile = snap.val();
-      if(profile.active === false){ toast('Account deactivated','err'); await signOut(auth); window.location.replace('login.html'); return; }
+      if(profile.active === false){ toast('Account deactivated','err'); await signOut(auth); window.location.replace('index.html'); return; }
       State.user = user; State.profile = profile;
       $('#authBlock').style.display = 'none';
       $('#appShell').classList.add('active');
@@ -838,13 +838,13 @@ onAuthStateChanged(auth, async (user)=>{
       }, 1000);
     } catch(err){
       console.error(err); toast('Failed to load profile: ' + (err.message || err.code || 'unknown'),'err');
-      await signOut(auth); window.location.replace('login.html');
+      await signOut(auth); window.location.replace('index.html');
     } finally { showLoading(false); }
   } else {
     detachListeners();
     $('#appShell').classList.remove('active');
     $('#authBlock').style.display = 'flex';
-    setTimeout(()=>{ window.location.replace('login.html'); }, 800);
+    setTimeout(()=>{ window.location.replace('index.html'); }, 800);
   }
 });
 
