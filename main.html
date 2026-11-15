@@ -226,33 +226,55 @@ table.data tr.row-overdue td:first-child{box-shadow:inset 3px 0 0 var(--red)}
 #globalLoading .loader{background:#fff;padding:24px 32px;border-radius:var(--r-lg);box-shadow:var(--shadow-lg);flex-direction:column}
 
 /* ============ PRODUCT GRID — MOBILE 2 COLUMNS FIX ============ */
-.pos-layout{display:grid;grid-template-columns:1fr;gap:18px;min-width:0}
-@media(min-width:1000px){.pos-layout{grid-template-columns:1.45fr 1fr;align-items:start}}
-
-/* Mobile-first: exactly 2 columns, no overflow */
-.pos-products{
+/* ============ PRODUCT GRID — MOBILE 2 COLUMNS FIX ============ */
+/* Prevent anything inside the pos-layout from pushing wider than viewport */
+.pos-layout{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:10px;
+  grid-template-columns:minmax(0, 1fr);
+  gap:18px;
+  min-width:0;
   width:100%;
   max-width:100%;
 }
-/* Tablet: 3 columns */
+.pos-layout > *{min-width:0;max-width:100%}
+@media(min-width:1000px){
+  .pos-layout{grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-items:start}
+}
+
+/* Products grid: guaranteed 2 columns on mobile, never overflow */
+.pos-products{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:8px;
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+}
 @media(min-width:640px){
   .pos-products{grid-template-columns:repeat(3, minmax(0, 1fr));gap:12px}
 }
-/* Desktop: auto-fill */
 @media(min-width:1000px){
   .pos-products{grid-template-columns:repeat(auto-fill, minmax(145px, 1fr));gap:12px}
 }
 
+/* Product card — box-sizing ensures padding never expands it beyond its grid track */
 .pos-prod{
-  background:#fff;border-radius:var(--r);padding:9px;
+  background:#fff;border-radius:var(--r);
+  padding:8px;
+  box-sizing:border-box;
   box-shadow:var(--shadow);cursor:pointer;transition:.2s;
   border:2px solid transparent;text-align:left;position:relative;
   overflow:hidden;display:flex;flex-direction:column;
-  min-width:0;max-width:100%;
+  min-width:0;
+  max-width:100%;
+  width:100%;
 }
+
+/* Cart column and everything inside also gets min-width:0 so nothing forces expansion */
+.cart-box{min-width:0;max-width:100%}
+.cart-box *{min-width:0}
+.pos-cats, .pos-subs{max-width:100%;box-sizing:border-box}
+
 .pos-prod:hover{transform:translateY(-3px);border-color:var(--orange);box-shadow:var(--shadow-lg)}
 .pos-prod:active{transform:scale(.97)}
 .pos-prod .pp-img{
